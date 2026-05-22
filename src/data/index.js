@@ -8,6 +8,7 @@ export const profile = {
   email: "hanureddy4268@gmail.com",
   linkedin: "https://www.linkedin.com/in/hanu-reddy-8b04b7167/",
   photo: "/hanu.png",
+  calendly: "https://calendly.com/hanureddy4268",
 };
 
 export const navItems = [
@@ -211,15 +212,13 @@ export const certifications = [
     title: "Journey Optimizer",
     subtitle: "Business Practitioner",
     label: "Adobe Certified Professional",
-    // Update credlyUrl with your personal Credly badge link from credly.com/my-badges
-    credlyUrl: "https://www.credly.com/org/adobe/badge/adobe-certified-professional-adobe-journey-optimizer-business-practitioner",
+    credlyUrl: "https://certification.adobe.com/credential/verify/65f439e3-39d6-11f1-be16-42010a400fe2/linkedin",
   },
   {
     title: "Real-Time CDP",
     subtitle: "Business Practitioner",
     label: "Adobe Certified Professional",
-    // Update credlyUrl with your personal Credly badge link from credly.com/my-badges
-    credlyUrl: "https://www.credly.com/org/adobe/badge/adobe-certified-professional-adobe-real-time-cdp-business-practitioner",
+    credlyUrl: "https://certification.adobe.com/credential/verify/6e2892bb-3699-11f1-be16-42010a400fe2/linkedin",
   },
 ];
 

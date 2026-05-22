@@ -417,9 +417,253 @@ a {
 .cert-copy p { margin: 0 0 22px; color: var(--navy); font-size: 21px; }
 .cert-copy a { display: inline-flex; color: #b91c1c; border: 1px solid rgba(185,28,28,0.28); border-radius: 10px; padding: 11px 22px; font-weight: 800; font-size: 13px; }
 
-/* ── Contact ─────────────────────────────────────────────── */
+/* ── Contact (legacy) ────────────────────────────────────── */
 .contact-card { max-width: 780px; margin: 0 auto; padding: 34px; display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; text-align: center; }
 .contact-card p { flex: 0 0 100%; color: var(--muted); margin: 18px 0 0; }
+
+/* ── Contact V2 ──────────────────────────────────────────── */
+.contact-v2 {
+  min-height: calc(100vh - var(--header-height));
+  padding: 60px 54px 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+/* Heading */
+.contact-v2-head { text-align: center; max-width: 760px; margin: 0 auto; }
+.contact-eyebrow {
+  display: inline-block;
+  color: #986a13;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.contact-v2-head h1 {
+  margin: 0 0 14px;
+  font-family: Cormorant Garamond, serif;
+  font-size: clamp(40px, 4vw, 58px);
+  color: var(--navy);
+  letter-spacing: -0.035em;
+}
+.contact-v2-head h1::after {
+  content: "";
+  display: block;
+  width: 58px; height: 2px;
+  margin: 14px auto 0;
+  background: var(--gold);
+}
+.contact-v2-head p {
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* Two-column body */
+.contact-v2-body {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 28px;
+  align-items: start;
+  max-width: 1180px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Profile column */
+.contact-profile-col {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* Profile card */
+.contact-profile-card {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  box-shadow: 0 18px 48px rgba(120,20,20,0.08);
+  padding: 32px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 18px;
+}
+.contact-photo-wrap {
+  position: relative;
+  width: 160px; height: 160px;
+  flex-shrink: 0;
+}
+.contact-photo {
+  width: 100%; height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: top center;
+  border: 4px solid white;
+  box-shadow: 0 0 0 3px var(--red), 0 20px 50px rgba(220,38,38,0.24);
+  display: block;
+  position: relative;
+  z-index: 2;
+}
+.contact-photo-ring {
+  position: absolute;
+  inset: -12px;
+  border-radius: 50%;
+  border: 1.5px dashed rgba(220,38,38,0.30);
+  animation: glowPulse 3s ease-in-out infinite;
+}
+.contact-photo-glow {
+  position: absolute;
+  inset: -30px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(220,38,38,0.14), transparent 65%);
+  z-index: 1;
+}
+.contact-profile-info { text-align: center; }
+.contact-profile-info h2 {
+  margin: 0;
+  font-family: Cormorant Garamond, serif;
+  font-size: 32px;
+  color: var(--navy);
+  letter-spacing: -0.03em;
+}
+.contact-profile-info p {
+  margin: 6px 0 4px;
+  font-weight: 800;
+  color: var(--red);
+  font-size: 14px;
+}
+.contact-profile-info span {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* Contact detail rows */
+.contact-detail-list {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  box-shadow: 0 12px 32px rgba(120,20,20,0.07);
+  overflow: hidden;
+}
+.contact-detail-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 22px;
+  border-bottom: 1px solid var(--line);
+  transition: background 0.2s;
+}
+.contact-detail-row:last-child { border-bottom: none; }
+.contact-detail-row:hover { background: #fff7f7; }
+.contact-detail-icon {
+  width: 40px; height: 40px;
+  border-radius: 13px;
+  background: #fff1f2;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.contact-detail-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.contact-detail-text small {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.contact-detail-text strong,
+.contact-detail-text a {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--navy);
+  text-decoration: none;
+}
+.contact-detail-text a:hover { color: var(--red); }
+
+/* Action buttons */
+.contact-action-row {
+  display: flex;
+  gap: 12px;
+}
+.contact-cta {
+  flex: 1;
+  min-height: 50px;
+  text-align: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+/* Calendly column */
+.contact-calendly-col { display: flex; flex-direction: column; }
+.calendly-card {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  box-shadow: 0 18px 48px rgba(120,20,20,0.08);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 700px;
+}
+.calendly-card-head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 24px 28px;
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(90deg, #fff7f7, white);
+}
+.calendly-icon {
+  width: 48px; height: 48px;
+  border-radius: 16px;
+  background: #fff1f2;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+.calendly-card-head h3 {
+  margin: 0;
+  color: var(--navy);
+  font-size: 20px;
+  font-weight: 800;
+}
+.calendly-card-head p {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+.calendly-embed-wrap {
+  flex: 1;
+  min-height: 620px;
+}
+.calendly-embed-wrap iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 620px;
+  border: none;
+}
+
+@media (max-width: 1100px) {
+  .contact-v2 { padding: 46px 24px 48px; }
+  .contact-v2-body { grid-template-columns: 1fr; max-width: 680px; }
+}
+@media (max-width: 760px) {
+  .contact-v2 { padding: 36px 14px 40px; }
+  .contact-action-row { flex-direction: column; }
+  .calendly-card { min-height: 580px; }
+  .calendly-embed-wrap, .calendly-embed-wrap iframe { min-height: 520px; }
+}
 
 /* ── Footer ──────────────────────────────────────────────── */
 .footer { padding: 28px 54px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; gap: 18px; color: var(--muted); font-size: 13px; background: white; }
@@ -547,11 +791,11 @@ a {
 .hero-v2 {
   position: relative;
   display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
+  grid-template-columns: 1fr 1fr;
   min-height: calc(100vh - var(--header-height));
-  padding: 56px 54px 40px;
-  gap: 48px;
-  align-items: center;
+  padding: 0 54px 0 54px;
+  gap: 0;
+  align-items: stretch;
   overflow: hidden;
 }
 
@@ -598,6 +842,8 @@ a {
   z-index: 3;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  padding: 64px 48px 64px 0;
 }
 .hero-v2-title {
   font-family: Cormorant Garamond, serif;
@@ -655,14 +901,27 @@ a {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 500px;
+  background: radial-gradient(ellipse 80% 70% at 55% 50%,
+    rgba(120,20,20,0.07) 0%,
+    rgba(220,38,38,0.04) 40%,
+    transparent 70%);
+  min-height: calc(100vh - var(--header-height));
+}
+
+/* Subtle vertical divider */
+.hero-v2-right::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 15%; bottom: 15%;
+  width: 1px;
+  background: linear-gradient(180deg, transparent, rgba(220,38,38,0.12) 30%, rgba(220,38,38,0.12) 70%, transparent);
 }
 
 .orbit-scene {
   position: relative;
-  width: 480px;
-  height: 480px;
-  perspective: 900px;
+  width: 560px;
+  height: 560px;
+  perspective: 800px;
 }
 
 /* Tilted, spinning rings */
@@ -673,69 +932,73 @@ a {
   pointer-events: none;
 }
 .or-1 {
-  width: 440px; height: 440px;
-  margin: -220px 0 0 -220px;
-  border: 1.5px dashed rgba(220,38,38,0.30);
-  animation: ringSpin1 24s linear infinite;
+  width: 520px; height: 520px;
+  margin: -260px 0 0 -260px;
+  border: 2px dashed rgba(220,38,38,0.35);
+  box-shadow: 0 0 18px 1px rgba(220,38,38,0.10), inset 0 0 18px 1px rgba(220,38,38,0.06);
+  animation: ringSpin1 26s linear infinite;
 }
 .or-2 {
-  width: 320px; height: 320px;
-  margin: -160px 0 0 -160px;
-  border: 1px solid rgba(180,83,9,0.32);
-  animation: ringSpin2 16s linear infinite;
+  width: 380px; height: 380px;
+  margin: -190px 0 0 -190px;
+  border: 1.5px solid rgba(180,83,9,0.40);
+  box-shadow: 0 0 14px 1px rgba(180,83,9,0.12);
+  animation: ringSpin2 17s linear infinite;
 }
 .or-3 {
-  width: 216px; height: 216px;
-  margin: -108px 0 0 -108px;
-  border: 1px dotted rgba(220,38,38,0.24);
-  animation: ringSpin3 10s linear infinite;
+  width: 258px; height: 258px;
+  margin: -129px 0 0 -129px;
+  border: 1.5px dotted rgba(220,38,38,0.30);
+  box-shadow: 0 0 10px rgba(220,38,38,0.14);
+  animation: ringSpin3 11s linear infinite;
 }
 @keyframes ringSpin1 {
-  from { transform: rotateX(72deg) rotateZ(0deg);   }
-  to   { transform: rotateX(72deg) rotateZ(360deg); }
+  from { transform: rotateX(66deg) rotateZ(0deg);   }
+  to   { transform: rotateX(66deg) rotateZ(360deg); }
 }
 @keyframes ringSpin2 {
-  from { transform: rotateX(52deg) rotateZ(0deg);    }
-  to   { transform: rotateX(52deg) rotateZ(-360deg); }
+  from { transform: rotateX(50deg) rotateZ(0deg);    }
+  to   { transform: rotateX(50deg) rotateZ(-360deg); }
 }
 @keyframes ringSpin3 {
-  from { transform: rotateX(30deg) rotateZ(0deg);   }
-  to   { transform: rotateX(30deg) rotateZ(360deg); }
+  from { transform: rotateX(28deg) rotateZ(0deg);   }
+  to   { transform: rotateX(28deg) rotateZ(360deg); }
 }
 
 /* Orbiting tech badges */
 .orbit-dot {
   position: absolute;
   left: 50%; top: 50%;
-  width: 54px; height: 36px;
-  margin: -18px 0 0 -27px;
-  border-radius: 10px;
-  background: white;
-  border: 1px solid rgba(220,38,38,0.20);
-  box-shadow: 0 10px 26px rgba(120,20,20,0.14);
+  width: 64px; height: 40px;
+  margin: -20px 0 0 -32px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.96);
+  border: 1px solid rgba(220,38,38,0.22);
+  box-shadow: 0 10px 30px rgba(120,20,20,0.16), 0 0 0 1px rgba(255,255,255,0.8);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 10;
+  backdrop-filter: blur(8px);
 }
 .orbit-dot span {
   color: var(--red);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 900;
   letter-spacing: 0.04em;
 }
-.od-1 { animation: orbitLg 14s linear infinite; }
-.od-2 { animation: orbitLg 14s linear infinite; animation-delay: -7s; }
-.od-3 { animation: orbitSm 11s linear infinite reverse; }
-.od-4 { animation: orbitSm 11s linear infinite reverse; animation-delay: -5.5s; }
+.od-1 { animation: orbitLg 16s linear infinite; }
+.od-2 { animation: orbitLg 16s linear infinite; animation-delay: -8s; }
+.od-3 { animation: orbitSm 12s linear infinite reverse; }
+.od-4 { animation: orbitSm 12s linear infinite reverse; animation-delay: -6s; }
 
 @keyframes orbitLg {
-  from { transform: rotate(0deg)   translateX(192px) rotate(0deg);   }
-  to   { transform: rotate(360deg) translateX(192px) rotate(-360deg); }
+  from { transform: rotate(0deg)   translateX(222px) rotate(0deg);   }
+  to   { transform: rotate(360deg) translateX(222px) rotate(-360deg); }
 }
 @keyframes orbitSm {
-  from { transform: rotate(0deg)   translateX(148px) rotate(0deg);   }
-  to   { transform: rotate(360deg) translateX(148px) rotate(-360deg); }
+  from { transform: rotate(0deg)   translateX(168px) rotate(0deg);   }
+  to   { transform: rotate(360deg) translateX(168px) rotate(-360deg); }
 }
 
 /* Profile nucleus */
@@ -743,7 +1006,7 @@ a {
   position: absolute;
   left: 50%; top: 50%;
   transform: translate(-50%, -50%);
-  width: 200px; height: 200px;
+  width: 230px; height: 230px;
   border-radius: 50%;
   z-index: 20;
   cursor: default;
@@ -753,36 +1016,36 @@ a {
   border-radius: 50%;
   object-fit: cover;
   object-position: top center;
-  border: 4px solid white;
-  box-shadow: 0 0 0 3px var(--red), 0 24px 60px rgba(220,38,38,0.28);
+  border: 5px solid white;
+  box-shadow: 0 0 0 3px var(--red), 0 30px 80px rgba(220,38,38,0.32);
   position: relative;
   z-index: 2;
   display: block;
 }
 .nucleus-glow {
   position: absolute;
-  inset: -40px;
+  inset: -50px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(220,38,38,0.20) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(220,38,38,0.22) 0%, transparent 65%);
   animation: glowPulse 3.2s ease-in-out infinite;
   z-index: 1;
 }
 .nucleus-ring {
   position: absolute;
-  inset: -14px;
+  inset: -16px;
   border-radius: 50%;
-  border: 1px solid rgba(220,38,38,0.38);
+  border: 1.5px solid rgba(220,38,38,0.42);
   animation: glowPulse 3.2s ease-in-out infinite;
   z-index: 1;
 }
 .nr-2 {
-  inset: -26px;
-  border-color: rgba(180,83,9,0.22);
+  inset: -30px;
+  border-color: rgba(180,83,9,0.25);
   animation-delay: -1.6s;
 }
 @keyframes glowPulse {
-  0%, 100% { opacity: 0.7; transform: scale(1);    }
-  50%       { opacity: 1;   transform: scale(1.06); }
+  0%, 100% { opacity: 0.65; transform: scale(1);    }
+  50%       { opacity: 1;    transform: scale(1.07); }
 }
 
 /* ── Flip metric cards ────────────────────────────────────── */
@@ -905,15 +1168,16 @@ a {
 @media (max-width: 1100px) {
   .hero-v2 {
     grid-template-columns: 1fr;
-    padding: 46px 24px 24px;
+    padding: 46px 24px 0;
     min-height: auto;
   }
-  .hero-v2-right { min-height: auto; }
-  .orbit-scene { width: 380px; height: 380px; }
-  .or-1 { width: 348px; height: 348px; margin: -174px 0 0 -174px; }
-  .or-2 { width: 254px; height: 254px; margin: -127px 0 0 -127px; }
-  .or-3 { width: 170px; height: 170px; margin: -85px 0 0 -85px; }
-  .profile-nucleus { width: 160px; height: 160px; }
+  .hero-v2-left { padding: 0 0 32px; }
+  .hero-v2-right { min-height: 420px; }
+  .orbit-scene { width: 400px; height: 400px; }
+  .or-1 { width: 368px; height: 368px; margin: -184px 0 0 -184px; }
+  .or-2 { width: 270px; height: 270px; margin: -135px 0 0 -135px; }
+  .or-3 { width: 182px; height: 182px; margin: -91px 0 0 -91px; }
+  .profile-nucleus { width: 175px; height: 175px; }
   .flip-grid {
     grid-template-columns: repeat(2, 1fr);
     padding-left: 24px;
@@ -922,32 +1186,35 @@ a {
 }
 
 @media (max-width: 760px) {
-  .hero-v2 { padding: 28px 14px 18px; gap: 20px; }
+  .hero-v2 { padding: 28px 14px 0; gap: 0; }
+  .hero-v2-left { padding: 0 0 28px; align-items: center; text-align: center; }
   .hero-v2-title { font-size: clamp(42px, 12vw, 60px); margin: 22px 0 18px; }
   .hero-v2-sub { font-size: 15px; }
-  .hero-v2-actions { display: grid; grid-template-columns: 1fr; gap: 12px; }
+  .tech-chips { justify-content: center; }
+  .hero-v2-actions { display: grid; grid-template-columns: 1fr; gap: 12px; width: 100%; }
   .hero-v2-actions .primary-btn,
   .hero-v2-actions .secondary-btn { width: 100%; }
-  .orbit-scene { width: 310px; height: 310px; }
-  .or-1 { width: 284px; height: 284px; margin: -142px 0 0 -142px; }
-  .or-2 { width: 208px; height: 208px; margin: -104px 0 0 -104px; }
-  .or-3 { width: 140px; height: 140px; margin: -70px 0 0 -70px; }
-  .profile-nucleus { width: 136px; height: 136px; }
+  .hero-v2-right { min-height: 360px; }
+  .orbit-scene { width: 320px; height: 320px; }
+  .or-1 { width: 295px; height: 295px; margin: -147px 0 0 -147px; }
+  .or-2 { width: 216px; height: 216px; margin: -108px 0 0 -108px; }
+  .or-3 { width: 145px; height: 145px; margin: -72px 0 0 -72px; }
+  .profile-nucleus { width: 148px; height: 148px; }
   .od-1, .od-2 { animation-name: orbitMd; }
   .od-3, .od-4 { animation-name: orbitXs; }
   .flip-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
     padding: 0 14px 46px;
   }
   .flip-card { height: 200px; }
-  .flip-value { font-size: 48px; }
+  .flip-value { font-size: 46px; }
 }
 
 @keyframes orbitMd {
-  from { transform: rotate(0deg)   translateX(145px) rotate(0deg);   }
-  to   { transform: rotate(360deg) translateX(145px) rotate(-360deg); }
+  from { transform: rotate(0deg)   translateX(152px) rotate(0deg);   }
+  to   { transform: rotate(360deg) translateX(152px) rotate(-360deg); }
 }
 @keyframes orbitXs {
-  from { transform: rotate(0deg)   translateX(108px) rotate(0deg);   }
-  to   { transform: rotate(360deg) translateX(108px) rotate(-360deg); }
+  from { transform: rotate(0deg)   translateX(115px) rotate(0deg);   }
+  to   { transform: rotate(360deg) translateX(115px) rotate(-360deg); }
 }
