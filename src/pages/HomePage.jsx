@@ -1,150 +1,183 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { metrics, profile } from "../data/index.js";
+import { metrics } from "../data/index.js";
 import { openResume } from "../utils/resume.js";
 
-const techStack = ["AEM Cloud", "AEP", "AJO", "RT-CDP", "Edge Delivery", "React"];
+const companies = ["HD Supply", "American Express", "Verizon", "PeakActivity", "Cummins"];
+
+const stack = [
+  { label: "Content Management", value: "AEM Cloud · Edge Delivery", color: "#f87171" },
+  { label: "Data Platform",       value: "AEP · Real-Time CDP",       color: "#fb923c" },
+  { label: "Journey Layer",       value: "AJO · Offer Decisioning",   color: "#fbbf24" },
+  { label: "Frontend Delivery",   value: "React · SPA Editor",        color: "#f87171" },
+];
 
 export default function HomePage() {
   const navigate = useNavigate();
   const [flipped, setFlipped] = useState(null);
 
   return (
-    <div className="home-v2">
+    <div className="home-dark">
 
       {/* ── HERO ─────────────────────────────────────────── */}
-      <section className="hero-v2">
-        <div className="hero-bg-grid" aria-hidden="true" />
+      <section className="hero-dark">
+        <div className="hero-dark-bg" aria-hidden="true" />
 
-        <div className="hero-v2-left">
+        {/* Left: copy */}
+        <div className="hero-dark-left">
           <motion.div
-            className="status-badge"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
+            className="hero-avail"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45 }}
           >
-            <span className="status-dot" />
+            <span className="avail-dot" />
             Available for Senior Roles
           </motion.div>
 
+          <motion.span
+            className="hero-dark-eyebrow"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+          >
+            Adobe Experience Cloud Engineer
+          </motion.span>
+
           <motion.h1
-            className="hero-v2-title"
-            initial={{ opacity: 0, y: 30 }}
+            className="hero-dark-h1"
+            initial={{ opacity: 0, y: 32 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.12 }}
+            transition={{ duration: 0.75, delay: 0.15 }}
           >
             Senior AEM<br />
-            <span className="title-accent">Full Stack</span><br />
-            Lead
+            <em>Full Stack</em><br />
+            Lead.
           </motion.h1>
 
           <motion.p
-            className="hero-v2-sub"
-            initial={{ opacity: 0, y: 18 }}
+            className="hero-dark-sub"
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.65, delay: 0.26 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
           >
-            Architecting scalable Adobe Experience Cloud solutions across AEM,
-            AEP, AJO and Edge Delivery — 10+ years, Fortune 500.
+            Architecting scalable, high-performance Adobe Experience Cloud
+            solutions that drive growth and measurable business impact.
           </motion.p>
 
           <motion.div
-            className="tech-chips"
+            className="hero-dark-ctas"
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.38 }}
+            transition={{ duration: 0.55, delay: 0.44 }}
           >
-            {techStack.map((t) => (
-              <span key={t} className="tech-chip">{t}</span>
-            ))}
-          </motion.div>
-
-          <motion.div
-            className="hero-v2-actions"
-            initial={{ opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.5 }}
-          >
-            <button
-              type="button"
-              onClick={() => navigate("/contact")}
-              className="primary-btn button-reset"
-            >
-              Let's Connect
+            <button type="button" onClick={() => navigate("/contact")} className="hd-btn-primary button-reset">
+              Let's Connect →
             </button>
-            <button
-              type="button"
-              onClick={openResume}
-              className="secondary-btn button-reset"
-            >
+            <button type="button" onClick={openResume} className="hd-btn-ghost button-reset">
               Download Resume
             </button>
           </motion.div>
+
+          <motion.div
+            className="hero-dark-companies"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.58 }}
+          >
+            <span className="delivered-label">Delivered for</span>
+            {companies.map((c, i) => (
+              <span key={c} className="co-tag">{c}{i < companies.length - 1 && <span className="co-sep"> ·</span>}</span>
+            ))}
+          </motion.div>
         </div>
 
-        {/* ── Orbit Scene ── */}
+        {/* Right: platform stack terminal */}
         <motion.div
-          className="hero-v2-right"
-          initial={{ opacity: 0, scale: 0.88 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.85, delay: 0.18, ease: "easeOut" }}
+          className="hero-dark-right"
+          initial={{ opacity: 0, x: 28 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.72, delay: 0.22, ease: "easeOut" }}
         >
-          <div className="orbit-scene">
-            {/* 3D-tilted spinning rings */}
-            <div className="orbit-ring or-1" aria-hidden="true" />
-            <div className="orbit-ring or-2" aria-hidden="true" />
-            <div className="orbit-ring or-3" aria-hidden="true" />
+          <div className="stack-terminal">
+            <div className="t-bar">
+              <span className="t-dot t-red" />
+              <span className="t-dot t-amber" />
+              <span className="t-dot t-green" />
+              <span className="t-title-text">platform-stack.aem</span>
+            </div>
 
-            {/* Orbiting tech badges */}
-            <div className="orbit-dot od-1" aria-hidden="true"><span>AEM</span></div>
-            <div className="orbit-dot od-2" aria-hidden="true"><span>AEP</span></div>
-            <div className="orbit-dot od-3" aria-hidden="true"><span>AJO</span></div>
-            <div className="orbit-dot od-4" aria-hidden="true"><span>CDP</span></div>
+            <div className="t-body">
+              <div className="t-prompt">
+                <span className="t-ps">$</span>
+                <span className="t-cmd">adobe --expertise --senior</span>
+              </div>
 
-            {/* Profile nucleus */}
-            <motion.div
-              className="profile-nucleus"
-              whileHover={{ scale: 1.06 }}
-              transition={{ type: "spring", stiffness: 200 }}
-            >
-              <div className="nucleus-glow" aria-hidden="true" />
-              <img
-                src={profile.photo}
-                alt={profile.shortName}
-                className="nucleus-photo"
-              />
-              <div className="nucleus-ring" aria-hidden="true" />
-              <div className="nucleus-ring nr-2" aria-hidden="true" />
-            </motion.div>
+              <div className="t-tree-output">
+                {stack.map((item, i) => (
+                  <motion.div
+                    key={item.label}
+                    className="t-row"
+                    initial={{ opacity: 0, x: -8 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.38, delay: 0.68 + i * 0.16 }}
+                  >
+                    <span className="t-branch">{i < stack.length - 1 ? "├──" : "└──"}</span>
+                    <span className="t-col">
+                      <span className="t-key">{item.label}</span>
+                      <span className="t-val" style={{ color: item.color }}>{item.value}</span>
+                    </span>
+                  </motion.div>
+                ))}
+              </div>
+
+              <div className="t-stats">
+                <div className="t-stat-cell">
+                  <strong>10+</strong><small>Years</small>
+                </div>
+                <div className="t-stat-sep" />
+                <div className="t-stat-cell">
+                  <strong>Fortune 500</strong><small>Clients</small>
+                </div>
+                <div className="t-stat-sep" />
+                <div className="t-stat-cell">
+                  <strong>3</strong><small>Certifications</small>
+                </div>
+              </div>
+
+              <div className="t-cursor-line">
+                <span className="t-ps">$</span>
+                <span className="t-blink" />
+              </div>
+            </div>
           </div>
         </motion.div>
       </section>
 
-      {/* ── FLIP METRIC CARDS ─────────────────────────────── */}
-      <section className="flip-grid" aria-label="Key metrics">
+      {/* ── DARK FLIP METRIC CARDS ─────────────────────────── */}
+      <section className="dark-flip-grid" aria-label="Key metrics">
         {metrics.map((metric, index) => (
           <motion.div
             key={metric.label}
-            className={`flip-card${flipped === index ? " is-flipped" : ""}`}
-            initial={{ opacity: 0, y: 32 }}
+            className={`dark-flip-card${flipped === index ? " is-flipped" : ""}`}
+            initial={{ opacity: 0, y: 28 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.08 + index * 0.1 }}
+            transition={{ delay: 0.1 + index * 0.1 }}
             onMouseEnter={() => setFlipped(index)}
             onMouseLeave={() => setFlipped(null)}
             onClick={() => setFlipped(flipped === index ? null : index)}
           >
-            <div className="flip-inner">
-              <div className="flip-front">
-                <div className="flip-index">{metric.icon}</div>
-                <div className="flip-value">{metric.value}</div>
-                <div className="flip-label">{metric.label}</div>
-                <div className="flip-hint">hover to reveal</div>
+            <div className="dfc-inner">
+              <div className="dfc-front">
+                <span className="dfc-num">{metric.icon}</span>
+                <div className="dfc-value">{metric.value}</div>
+                <div className="dfc-label">{metric.label}</div>
               </div>
-              <div className="flip-back">
-                <div className="flip-back-value">{metric.value}</div>
-                <p className="flip-back-detail">{metric.detail}</p>
-                <div className="flip-back-tag">{metric.label}</div>
+              <div className="dfc-back">
+                <div className="dfc-bvalue">{metric.value}</div>
+                <p className="dfc-bdetail">{metric.detail}</p>
+                <span className="dfc-btag">{metric.label}</span>
               </div>
             </div>
           </motion.div>

@@ -24,11 +24,13 @@ const routeMap = {
 export default function App() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const isDark = location.pathname === "/";
 
   const handleNavClick = (pageId) => {
     navigate(routeMap[pageId]);
-    setMobileMenuOpen(false);
+    setMenuOpen(false);
   };
 
   const activeId = Object.entries(routeMap).find(
@@ -36,7 +38,9 @@ export default function App() {
   )?.[0] ?? "home";
 
   return (
-    <main className="portfolio-light">
+    <main className={`portfolio-light${isDark ? " page-is-dark" : ""}`}>
+
+      {/* ── Header ── */}
       <header className="header">
         <button
           type="button"
@@ -51,24 +55,8 @@ export default function App() {
           </span>
         </button>
 
-        <button
-          type="button"
-          className={`mobile-menu-btn button-reset ${mobileMenuOpen ? "open" : ""}`}
-          onClick={() => setMobileMenuOpen((open) => !open)}
-          aria-label="Toggle navigation menu"
-          aria-expanded={mobileMenuOpen}
-          aria-controls="primary-nav"
-        >
-          <span />
-          <span />
-          <span />
-        </button>
-
-        <nav
-          id="primary-nav"
-          className={`nav ${mobileMenuOpen ? "open" : ""}`}
-          aria-label="Primary navigation"
-        >
+        {/* Desktop nav */}
+        <nav className="nav-desktop" aria-label="Primary navigation">
           {navItems.map((item) => (
             <button
               key={item.id}
@@ -82,25 +70,83 @@ export default function App() {
           ))}
           <button
             type="button"
-            onClick={() => {
-              openResume();
-              setMobileMenuOpen(false);
-            }}
+            onClick={openResume}
             className="resume-btn button-reset"
           >
             Resume
           </button>
         </nav>
+
+        {/* Mobile hamburger */}
+        <button
+          type="button"
+          className={`hamburger button-reset${menuOpen ? " is-open" : ""}`}
+          onClick={() => setMenuOpen((v) => !v)}
+          aria-label={menuOpen ? "Close menu" : "Open menu"}
+          aria-expanded={menuOpen}
+        >
+          <span className="ham-line" />
+          <span className="ham-line" />
+          <span className="ham-line" />
+        </button>
       </header>
 
+      {/* ── Mobile full-screen overlay ── */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            className="mobile-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.22 }}
+          >
+            <motion.nav
+              className="mobile-nav"
+              initial={{ y: -24, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -16, opacity: 0 }}
+              transition={{ duration: 0.28, ease: "easeOut" }}
+              aria-label="Mobile navigation"
+            >
+              {navItems.map((item, i) => (
+                <motion.button
+                  key={item.id}
+                  type="button"
+                  onClick={() => handleNavClick(item.id)}
+                  className={`mobile-nav-link button-reset${activeId === item.id ? " active" : ""}`}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.06 + i * 0.06 }}
+                >
+                  <span className="mnl-num">{String(i + 1).padStart(2, "0")}</span>
+                  {item.label}
+                </motion.button>
+              ))}
+              <motion.button
+                type="button"
+                onClick={() => { openResume(); setMenuOpen(false); }}
+                className="mobile-resume-btn button-reset"
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.42 }}
+              >
+                Download Resume
+              </motion.button>
+            </motion.nav>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ── Page content ── */}
       <AnimatePresence mode="wait">
         <motion.div
           key={location.pathname}
           className="page-transition"
-          initial={{ opacity: 0, y: 18, filter: "blur(6px)" }}
+          initial={{ opacity: 0, y: 16, filter: "blur(5px)" }}
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          exit={{ opacity: 0, y: -14, filter: "blur(6px)" }}
-          transition={{ duration: 0.38, ease: "easeOut" }}
+          exit={{ opacity: 0, y: -12, filter: "blur(5px)" }}
+          transition={{ duration: 0.34, ease: "easeOut" }}
         >
           <Routes location={location}>
             <Route path="/" element={<HomePage />} />
