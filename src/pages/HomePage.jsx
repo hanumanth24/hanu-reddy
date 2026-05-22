@@ -1,6 +1,7 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { metrics } from "../data/index.js";
+import { certifications, metrics } from "../data/index.js";
 import { openResume } from "../utils/resume.js";
 
 const companies = ["HD Supply", "American Express", "Verizon", "PeakActivity", "Cummins"];
@@ -20,8 +21,70 @@ const deliveryFlow = [
   { title: "React Experience", detail: "Modern UI delivery with measurable performance" },
 ];
 
+const metricDetails = [
+  {
+    visual: "10+",
+    visualLabel: "years",
+    focus: "Enterprise delivery depth",
+    nodes: ["AEM", "Cloud", "Lead", "Scale"],
+    theme: "experience",
+    ringLabels: ["Architecture", "Delivery", "Leadership"],
+    points: [
+      "Led AEM delivery across enterprise environments",
+      "Partnered with product, authoring and release teams",
+      "Balanced frontend, backend and platform ownership",
+    ],
+  },
+  {
+    visual: "50%",
+    visualLabel: "faster loads",
+    focus: "Page performance",
+    nodes: ["EDS", "CDN", "Cache", "CWV"],
+    theme: "speed",
+    ringLabels: ["Edge", "Cache", "Vitals"],
+    points: [
+      "Optimized AEM Cloud and Edge Delivery patterns",
+      "Improved Dispatcher and CDN cache behavior",
+      "Reduced page weight through delivery best practices",
+    ],
+  },
+  {
+    visual: "30%",
+    visualLabel: "lower latency",
+    focus: "Runtime tuning",
+    nodes: ["Route", "CDN", "Origin", "Assets"],
+    theme: "latency",
+    ringLabels: ["Route", "Origin", "Assets"],
+    points: [
+      "Tuned CDN routing and asset delivery paths",
+      "Reduced unnecessary origin traffic",
+      "Improved enterprise site response consistency",
+    ],
+  },
+  {
+    visual: "F500",
+    visualLabel: "delivery",
+    focus: "Enterprise scale",
+    nodes: ["HD", "Amex", "VZ", "CX"],
+    theme: "enterprise",
+    ringLabels: ["Clients", "Teams", "Scale"],
+    points: [
+      "Delivered for Fortune 500 product teams",
+      "Supported regulated and high-traffic experiences",
+      "Worked across commerce, telecom and finance domains",
+    ],
+  },
+];
+
+const impactMetrics = metrics.map((metric, index) => ({
+  ...metric,
+  ...metricDetails[index],
+}));
+
 export default function HomePage() {
   const navigate = useNavigate();
+  const [activeMetric, setActiveMetric] = useState(1);
+  const activeImpact = impactMetrics[activeMetric];
 
   return (
     <div className="home-dark">
@@ -113,93 +176,69 @@ export default function HomePage() {
         >
           <div className="platform-visual" aria-label="Animated Adobe platform graphic">
             <div className="stack-terminal">
-            <div className="t-bar">
-              <span className="t-dot t-red" />
-              <span className="t-dot t-amber" />
-              <span className="t-dot t-green" />
-              <span className="t-title-text">platform-stack.aem</span>
-            </div>
-
-            <div className="t-body">
-              <div className="t-prompt">
-                <span className="t-ps">$</span>
-                <span className="t-cmd">adobe --expertise --senior</span>
+              <div className="t-bar">
+                <span className="t-dot t-red" />
+                <span className="t-dot t-amber" />
+                <span className="t-dot t-green" />
+                <span className="t-title-text">platform-stack.aem</span>
               </div>
 
-              <div className="t-tree-output">
-                {stack.map((item, i) => (
-                  <motion.div
-                    key={item.label}
-                    className="t-row"
-                    initial={{ opacity: 0, x: -8 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.38, delay: 0.68 + i * 0.16 }}
-                  >
-                    <span className="t-branch">{i < stack.length - 1 ? "├──" : "└──"}</span>
-                    <span className="t-col">
-                      <span className="t-key">{item.label}</span>
-                      <span className="t-val" style={{ color: item.color }}>{item.value}</span>
-                    </span>
-                  </motion.div>
-                ))}
-              </div>
-
-              <div className="t-stats">
-                <div className="t-stat-cell">
-                  <strong>10+</strong><small>Years</small>
+              <div className="t-body">
+                <div className="t-prompt">
+                  <span className="t-ps">$</span>
+                  <span className="t-cmd">adobe --expertise --senior</span>
                 </div>
-                <div className="t-stat-sep" />
-                <div className="t-stat-cell">
-                  <strong>Fortune 500</strong><small>Clients</small>
-                </div>
-                <div className="t-stat-sep" />
-                <div className="t-stat-cell">
-                  <strong>3</strong><small>Certifications</small>
-                </div>
-              </div>
 
-              <div className="t-cursor-line">
-                <span className="t-ps">$</span>
-                <span className="t-blink" />
+                <div className="t-tree-output">
+                  {stack.map((item, i) => (
+                    <motion.div
+                      key={item.label}
+                      className="t-row"
+                      initial={{ opacity: 0, x: -8 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.38, delay: 0.68 + i * 0.16 }}
+                    >
+                      <span className="t-branch">{i < stack.length - 1 ? "├──" : "└──"}</span>
+                      <span className="t-col">
+                        <span className="t-key">{item.label}</span>
+                        <span className="t-val" style={{ color: item.color }}>{item.value}</span>
+                      </span>
+                    </motion.div>
+                  ))}
+                </div>
+
+                <div className="t-stats">
+                  <div className="t-stat-cell">
+                    <strong>10+</strong><small>Years</small>
+                  </div>
+                  <div className="t-stat-sep" />
+                  <div className="t-stat-cell">
+                    <strong>Fortune 500</strong><small>Clients</small>
+                  </div>
+                  <div className="t-stat-sep" />
+                  <div className="t-stat-cell">
+                    <strong>{certifications.length}</strong><small>Certifications</small>
+                  </div>
+                </div>
+
+                <div className="credential-mini" aria-label="Adobe certifications">
+                  {certifications.map((certification) => (
+                    <div key={certification.title} className="credential-mini-card">
+                      <span>Adobe</span>
+                      <strong>{certification.title}</strong>
+                      <small>{certification.subtitle}</small>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="t-cursor-line">
+                  <span className="t-ps">$</span>
+                  <span className="t-blink" />
+                </div>
               </div>
-            </div>
             </div>
           </div>
         </motion.div>
-      </section>
-
-      <section className="delivery-flow" aria-label="Adobe delivery flow">
-        <motion.div
-          className="flow-heading"
-          initial={{ opacity: 0, y: 18 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.35 }}
-          transition={{ duration: 0.45 }}
-        >
-          <span>Delivery System</span>
-          <h2>From content architecture to real-time activation</h2>
-        </motion.div>
-
-        <div className="flow-track">
-          <div className="flow-rail" aria-hidden="true">
-            <span className="flow-pulse flow-pulse-one" />
-            <span className="flow-pulse flow-pulse-two" />
-          </div>
-          {deliveryFlow.map((item, index) => (
-            <motion.div
-              key={item.title}
-              className="flow-step"
-              initial={{ opacity: 0, y: 26 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.4 }}
-              transition={{ duration: 0.42, delay: index * 0.08 }}
-            >
-              <span className="flow-index">{String(index + 1).padStart(2, "0")}</span>
-              <strong>{item.title}</strong>
-              <p>{item.detail}</p>
-            </motion.div>
-          ))}
-        </div>
       </section>
 
       <section className="proof-points" aria-label="Professional proof points">
@@ -238,41 +277,79 @@ export default function HomePage() {
           </motion.div>
 
           <motion.div
-            className="impact-radar"
+            className={`impact-radar radar-theme-${activeImpact.theme}`}
             initial={{ opacity: 0, scale: 0.92 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true, amount: 0.35 }}
-            transition={{ duration: 0.55, delay: 0.12 }}
+            transition={{ duration: 0.32, delay: 0.08 }}
             aria-label="Performance impact graphic"
           >
-            <span className="radar-ring radar-ring-one" />
-            <span className="radar-ring radar-ring-two" />
-            <span className="radar-ring radar-ring-three" />
-            <span className="radar-sweep" />
-            <span className="radar-node radar-node-one">AEM</span>
-            <span className="radar-node radar-node-two">CDN</span>
-            <span className="radar-node radar-node-three">AEP</span>
-            <span className="radar-node radar-node-four">AJO</span>
-            <div className="radar-core">
-              <strong>50%</strong>
-              <span>faster loads</span>
-            </div>
+            <motion.div
+              key={activeImpact.label}
+              className="radar-system"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.14 }}
+            >
+              <span className="radar-ring radar-ring-one" />
+              <span className="radar-ring radar-ring-two" />
+              <span className="radar-ring radar-ring-three" />
+              <span className="radar-sweep" />
+              {activeImpact.ringLabels.map((label, index) => (
+                <span key={label} className={`radar-ring-label radar-ring-label-${index + 1}`}>
+                  {label}
+                </span>
+              ))}
+              {activeImpact.nodes.map((node, index) => (
+                <span key={`${activeImpact.label}-${node}`} className={`radar-node radar-node-${index + 1}`}>
+                  {node}
+                </span>
+              ))}
+              <div className="radar-core">
+                <strong>{activeImpact.visual}</strong>
+                <span>{activeImpact.visualLabel}</span>
+              </div>
+            </motion.div>
+            <motion.div
+              key={activeImpact.focus}
+              className="radar-caption"
+              initial={{ opacity: 0, y: 4 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.14 }}
+            >
+              {activeImpact.focus}
+            </motion.div>
           </motion.div>
 
           <div className="impact-rail" aria-label="Delivery metrics">
-            {metrics.map((metric, index) => (
+            {impactMetrics.map((metric, index) => (
               <motion.div
                 key={metric.label}
-                className="impact-metric"
+                className={`impact-metric flip-metric${activeMetric === index ? " is-active" : ""}`}
                 initial={{ opacity: 0, x: 28 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true, amount: 0.4 }}
                 transition={{ duration: 0.4, delay: 0.08 * index }}
+                tabIndex={0}
+                onMouseEnter={() => setActiveMetric(index)}
+                onFocus={() => setActiveMetric(index)}
               >
-                <span>{metric.icon}</span>
-                <div>
-                  <strong>{metric.value}</strong>
-                  <small>{metric.label}</small>
+                <div className="flip-metric-inner">
+                  <div className="metric-face metric-front">
+                    <span>{metric.icon}</span>
+                    <div>
+                      <strong>{metric.value}</strong>
+                      <small>{metric.label}</small>
+                    </div>
+                  </div>
+                  <div className="metric-face metric-back">
+                    <strong>{metric.detail}</strong>
+                    <ul>
+                      {metric.points.map((point) => (
+                        <li key={point}>{point}</li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
               </motion.div>
             ))}
@@ -283,6 +360,40 @@ export default function HomePage() {
           <span>Delivered across</span>
           {companies.map((company) => (
             <strong key={company}>{company}</strong>
+          ))}
+        </div>
+      </section>
+
+      <section className="delivery-flow" aria-label="Adobe delivery flow">
+        <motion.div
+          className="flow-heading"
+          initial={{ opacity: 0, y: 18 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.35 }}
+          transition={{ duration: 0.45 }}
+        >
+          <span>Delivery System</span>
+          <h2>From content architecture to real-time activation</h2>
+        </motion.div>
+
+        <div className="flow-track">
+          <div className="flow-rail" aria-hidden="true">
+            <span className="flow-pulse flow-pulse-one" />
+            <span className="flow-pulse flow-pulse-two" />
+          </div>
+          {deliveryFlow.map((item, index) => (
+            <motion.div
+              key={item.title}
+              className="flow-step"
+              initial={{ opacity: 0, y: 26 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.4 }}
+              transition={{ duration: 0.42, delay: index * 0.08 }}
+            >
+              <span className="flow-index">{String(index + 1).padStart(2, "0")}</span>
+              <strong>{item.title}</strong>
+              <p>{item.detail}</p>
+            </motion.div>
           ))}
         </div>
       </section>

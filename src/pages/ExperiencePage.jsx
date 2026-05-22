@@ -10,6 +10,9 @@ export default function ExperiencePage() {
       text="A clean summary of responsibilities, platform ownership and measurable delivery impact. This is not the full resume; the PDF can be downloaded from the header."
     >
       <div className="experience-showcase">
+        <div className="experience-timeline-rail" aria-hidden="true">
+          <span />
+        </div>
         {experience.map((job, index) => (
           <motion.article
             className="experience-card"

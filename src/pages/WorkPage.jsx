@@ -19,11 +19,17 @@ export default function WorkPage() {
         transition={{ duration: 0.45 }}
       >
         <div className="featured-work-visual" aria-hidden="true">
-          <div className="work-radar">
-            <span>AEM</span>
-            <span>EDS</span>
-            <span>CDN</span>
-            <span>React</span>
+          <div className="work-system-graphic">
+            <div className="work-radar">
+              <span>AEM</span>
+              <span>EDS</span>
+              <span>CDN</span>
+              <span>React</span>
+            </div>
+            <div className="work-signal-board">
+              <strong>50%</strong>
+              <span>faster page delivery</span>
+            </div>
           </div>
         </div>
         <div className="featured-work-copy">
@@ -52,6 +58,9 @@ export default function WorkPage() {
             <div className="work-card-top">
               <span aria-hidden="true">{String(index + 2).padStart(2, "0")}</span>
               <strong>{project.impact}</strong>
+            </div>
+            <div className="work-card-graphic" aria-hidden="true">
+              {project.tech.slice(0, 4).map((tag) => <span key={tag}>{tag}</span>)}
             </div>
             <h3>{project.title}</h3>
             <div className="work-mini-block"><b>Problem</b><p>{project.problem}</p></div>

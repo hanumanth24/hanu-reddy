@@ -62,6 +62,14 @@ export default function ContactPage() {
             </div>
           </div>
 
+          <div className="contact-availability-panel">
+            <span className="availability-pulse" aria-hidden="true" />
+            <div>
+              <strong>Open to senior Adobe roles</strong>
+              <p>AEM Architect, AEM Lead, AEP Engineer and AJO implementation roles.</p>
+            </div>
+          </div>
+
           {/* Contact detail rows */}
           <div className="contact-detail-list">
             {contactItems.map((item) => (
