@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { metrics } from "../data/index.js";
@@ -7,15 +6,22 @@ import { openResume } from "../utils/resume.js";
 const companies = ["HD Supply", "American Express", "Verizon", "PeakActivity", "Cummins"];
 
 const stack = [
-  { label: "Content Management", value: "AEM Cloud · Edge Delivery", color: "#f87171" },
-  { label: "Data Platform",       value: "AEP · Real-Time CDP",       color: "#fb923c" },
-  { label: "Journey Layer",       value: "AJO · Offer Decisioning",   color: "#fbbf24" },
-  { label: "Frontend Delivery",   value: "React · SPA Editor",        color: "#f87171" },
+  { label: "Content Management", value: "AEM Cloud · Edge Delivery", color: "#b4232a" },
+  { label: "Data Platform",       value: "AEP · Real-Time CDP",       color: "#4f7d6b" },
+  { label: "Journey Layer",       value: "AJO · Offer Decisioning",   color: "#b8792b" },
+  { label: "Frontend Delivery",   value: "React · SPA Editor",        color: "#b4232a" },
+];
+
+const deliveryFlow = [
+  { title: "AEM Cloud", detail: "Authoring models, components and content architecture" },
+  { title: "Edge Delivery", detail: "Fast page delivery with clean publishing paths" },
+  { title: "Dispatcher + CDN", detail: "Caching, routing and Core Web Vitals tuning" },
+  { title: "AEP + AJO", detail: "Profile data, journeys and decisioning activation" },
+  { title: "React Experience", detail: "Modern UI delivery with measurable performance" },
 ];
 
 export default function HomePage() {
   const navigate = useNavigate();
-  const [flipped, setFlipped] = useState(null);
 
   return (
     <div className="home-dark">
@@ -23,6 +29,11 @@ export default function HomePage() {
       {/* ── HERO ─────────────────────────────────────────── */}
       <section className="hero-dark">
         <div className="hero-dark-bg" aria-hidden="true" />
+        <div className="hero-signal-field" aria-hidden="true">
+          <span className="signal-line signal-line-one" />
+          <span className="signal-line signal-line-two" />
+          <span className="signal-line signal-line-three" />
+        </div>
 
         {/* Left: copy */}
         <div className="hero-dark-left">
@@ -100,7 +111,8 @@ export default function HomePage() {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.72, delay: 0.22, ease: "easeOut" }}
         >
-          <div className="stack-terminal">
+          <div className="platform-visual" aria-label="Animated Adobe platform graphic">
+            <div className="stack-terminal">
             <div className="t-bar">
               <span className="t-dot t-red" />
               <span className="t-dot t-amber" />
@@ -151,37 +163,128 @@ export default function HomePage() {
                 <span className="t-blink" />
               </div>
             </div>
+            </div>
           </div>
         </motion.div>
       </section>
 
-      {/* ── DARK FLIP METRIC CARDS ─────────────────────────── */}
-      <section className="dark-flip-grid" aria-label="Key metrics">
-        {metrics.map((metric, index) => (
+      <section className="delivery-flow" aria-label="Adobe delivery flow">
+        <motion.div
+          className="flow-heading"
+          initial={{ opacity: 0, y: 18 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.35 }}
+          transition={{ duration: 0.45 }}
+        >
+          <span>Delivery System</span>
+          <h2>From content architecture to real-time activation</h2>
+        </motion.div>
+
+        <div className="flow-track">
+          <div className="flow-rail" aria-hidden="true">
+            <span className="flow-pulse flow-pulse-one" />
+            <span className="flow-pulse flow-pulse-two" />
+          </div>
+          {deliveryFlow.map((item, index) => (
+            <motion.div
+              key={item.title}
+              className="flow-step"
+              initial={{ opacity: 0, y: 26 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.4 }}
+              transition={{ duration: 0.42, delay: index * 0.08 }}
+            >
+              <span className="flow-index">{String(index + 1).padStart(2, "0")}</span>
+              <strong>{item.title}</strong>
+              <p>{item.detail}</p>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+
+      <section className="proof-points" aria-label="Professional proof points">
+        <motion.div
+          className="proof-head"
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45, delay: 0.2 }}
+        >
+          <span>Impact System</span>
+          <h2>Performance, platform delivery and enterprise scale in one operating model</h2>
+        </motion.div>
+
+        <div className="impact-board">
           <motion.div
-            key={metric.label}
-            className={`dark-flip-card${flipped === index ? " is-flipped" : ""}`}
-            initial={{ opacity: 0, y: 28 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 + index * 0.1 }}
-            onMouseEnter={() => setFlipped(index)}
-            onMouseLeave={() => setFlipped(null)}
-            onClick={() => setFlipped(flipped === index ? null : index)}
+            className="impact-story"
+            initial={{ opacity: 0, x: -28 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, amount: 0.4 }}
+            transition={{ duration: 0.48 }}
           >
-            <div className="dfc-inner">
-              <div className="dfc-front">
-                <span className="dfc-num">{metric.icon}</span>
-                <div className="dfc-value">{metric.value}</div>
-                <div className="dfc-label">{metric.label}</div>
-              </div>
-              <div className="dfc-back">
-                <div className="dfc-bvalue">{metric.value}</div>
-                <p className="dfc-bdetail">{metric.detail}</p>
-                <span className="dfc-btag">{metric.label}</span>
-              </div>
+            <span className="impact-kicker">Enterprise Adobe Experience Cloud delivery</span>
+            <h3>Build once for authors, customers and performance teams.</h3>
+            <p>
+              I connect AEM Cloud, Edge Delivery, Dispatcher, CDN, AEP and AJO
+              into production systems that are measurable, maintainable and fast.
+            </p>
+            <div className="impact-tags" aria-label="Core delivery capabilities">
+              <span>AEM Cloud</span>
+              <span>EDS</span>
+              <span>Dispatcher</span>
+              <span>CDN</span>
+              <span>AEP</span>
+              <span>AJO</span>
             </div>
           </motion.div>
-        ))}
+
+          <motion.div
+            className="impact-radar"
+            initial={{ opacity: 0, scale: 0.92 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true, amount: 0.35 }}
+            transition={{ duration: 0.55, delay: 0.12 }}
+            aria-label="Performance impact graphic"
+          >
+            <span className="radar-ring radar-ring-one" />
+            <span className="radar-ring radar-ring-two" />
+            <span className="radar-ring radar-ring-three" />
+            <span className="radar-sweep" />
+            <span className="radar-node radar-node-one">AEM</span>
+            <span className="radar-node radar-node-two">CDN</span>
+            <span className="radar-node radar-node-three">AEP</span>
+            <span className="radar-node radar-node-four">AJO</span>
+            <div className="radar-core">
+              <strong>50%</strong>
+              <span>faster loads</span>
+            </div>
+          </motion.div>
+
+          <div className="impact-rail" aria-label="Delivery metrics">
+            {metrics.map((metric, index) => (
+              <motion.div
+                key={metric.label}
+                className="impact-metric"
+                initial={{ opacity: 0, x: 28 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, amount: 0.4 }}
+                transition={{ duration: 0.4, delay: 0.08 * index }}
+              >
+                <span>{metric.icon}</span>
+                <div>
+                  <strong>{metric.value}</strong>
+                  <small>{metric.label}</small>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+
+        <div className="enterprise-strip" aria-label="Enterprise delivery clients">
+          <span>Delivered across</span>
+          {companies.map((company) => (
+            <strong key={company}>{company}</strong>
+          ))}
+        </div>
       </section>
 
     </div>

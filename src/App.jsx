@@ -10,7 +10,7 @@ import CredentialsPage from "./pages/CredentialsPage.jsx";
 import ContactPage from "./pages/ContactPage.jsx";
 import { navItems, profile } from "./data/index.js";
 import { openResume } from "./utils/resume.js";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const routeMap = {
   home:        "/",
@@ -26,7 +26,10 @@ export default function App() {
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const isDark = location.pathname === "/";
+  useEffect(() => {
+    document.body.classList.toggle("mobile-nav-open", menuOpen);
+    return () => document.body.classList.remove("mobile-nav-open");
+  }, [menuOpen]);
 
   const handleNavClick = (pageId) => {
     navigate(routeMap[pageId]);
@@ -38,7 +41,7 @@ export default function App() {
   )?.[0] ?? "home";
 
   return (
-    <main className={`portfolio-light${isDark ? " page-is-dark" : ""}`}>
+    <main className="portfolio-light">
 
       {/* ── Header ── */}
       <header className="header">
@@ -84,6 +87,7 @@ export default function App() {
           onClick={() => setMenuOpen((v) => !v)}
           aria-label={menuOpen ? "Close menu" : "Open menu"}
           aria-expanded={menuOpen}
+          aria-controls="mobile-nav"
         >
           <span className="ham-line" />
           <span className="ham-line" />
@@ -100,15 +104,22 @@ export default function App() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.22 }}
+            onClick={() => setMenuOpen(false)}
           >
             <motion.nav
+              id="mobile-nav"
               className="mobile-nav"
-              initial={{ y: -24, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: -16, opacity: 0 }}
+              initial={{ x: 34, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: 24, opacity: 0 }}
               transition={{ duration: 0.28, ease: "easeOut" }}
               aria-label="Mobile navigation"
+              onClick={(event) => event.stopPropagation()}
             >
+              <div className="mobile-nav-head">
+                <span>Navigation</span>
+                <strong>Hanu Reddy</strong>
+              </div>
               {navItems.map((item, i) => (
                 <motion.button
                   key={item.id}
