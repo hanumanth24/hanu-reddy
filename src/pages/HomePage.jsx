@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import PlatformGraphic from "../components/PlatformGraphic.jsx";
 import MetricCard from "../components/MetricCard.jsx";
-import { metrics } from "../data/index.js";
+import { metrics, profile } from "../data/index.js";
 import { openResume } from "../utils/resume.js";
 
 export default function HomePage() {
@@ -63,6 +63,14 @@ export default function HomePage() {
           </motion.div>
         </div>
         <div className="hero-right">
+          <motion.div
+            className="hero-photo-wrap"
+            initial={{ opacity: 0, scale: 0.92 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+          >
+            <img src={profile.photo} alt={profile.shortName} className="hero-photo" />
+          </motion.div>
           <PlatformGraphic />
         </div>
       </section>

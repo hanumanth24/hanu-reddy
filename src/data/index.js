@@ -7,6 +7,7 @@ export const profile = {
   phone: "(810) 493-7039",
   email: "hanureddy4268@gmail.com",
   linkedin: "https://www.linkedin.com/in/hanu-reddy-8b04b7167/",
+  photo: "/hanu.png",
 };
 
 export const navItems = [
