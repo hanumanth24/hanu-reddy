@@ -1,10 +1,12 @@
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import PlatformGraphic from "../components/PlatformGraphic.jsx";
 import MetricCard from "../components/MetricCard.jsx";
 import { metrics } from "../data/index.js";
 import { openResume } from "../utils/resume.js";
 
-export default function HomePage({ setActivePage }) {
+export default function HomePage() {
+  const navigate = useNavigate();
   return (
     <div>
       <section className="hero">
@@ -46,7 +48,7 @@ export default function HomePage({ setActivePage }) {
           >
             <button
               type="button"
-              onClick={() => setActivePage("contact")}
+              onClick={() => navigate("/contact")}
               className="primary-btn button-reset"
             >
               Let's Connect

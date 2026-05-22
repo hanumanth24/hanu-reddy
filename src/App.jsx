@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
 import HRLogo from "./components/HRLogo.jsx";
@@ -10,24 +10,30 @@ import CredentialsPage from "./pages/CredentialsPage.jsx";
 import ContactPage from "./pages/ContactPage.jsx";
 import { navItems, profile } from "./data/index.js";
 import { openResume } from "./utils/resume.js";
+import { useState } from "react";
+
+const routeMap = {
+  home:        "/",
+  expertise:   "/expertise",
+  work:        "/work",
+  experience:  "/experience",
+  credentials: "/credentials",
+  contact:     "/contact",
+};
 
 export default function App() {
-  const [activePage, setActivePage] = useState("home");
+  const navigate = useNavigate();
+  const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleNavClick = (pageId) => {
-    setActivePage(pageId);
+    navigate(routeMap[pageId]);
     setMobileMenuOpen(false);
   };
 
-  const pages = {
-    home:        <HomePage setActivePage={setActivePage} />,
-    expertise:   <ExpertisePage />,
-    work:        <WorkPage />,
-    experience:  <ExperiencePage />,
-    credentials: <CredentialsPage />,
-    contact:     <ContactPage />,
-  };
+  const activeId = Object.entries(routeMap).find(
+    ([, path]) => path === location.pathname
+  )?.[0] ?? "home";
 
   return (
     <main className="portfolio-light">
@@ -68,8 +74,8 @@ export default function App() {
               key={item.id}
               type="button"
               onClick={() => handleNavClick(item.id)}
-              className={`nav-link button-reset ${activePage === item.id ? "active" : ""}`}
-              aria-current={activePage === item.id ? "page" : undefined}
+              className={`nav-link button-reset ${activeId === item.id ? "active" : ""}`}
+              aria-current={activeId === item.id ? "page" : undefined}
             >
               {item.label}
             </button>
@@ -89,14 +95,21 @@ export default function App() {
 
       <AnimatePresence mode="wait">
         <motion.div
-          key={activePage}
+          key={location.pathname}
           className="page-transition"
           initial={{ opacity: 0, y: 18, filter: "blur(6px)" }}
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           exit={{ opacity: 0, y: -14, filter: "blur(6px)" }}
           transition={{ duration: 0.38, ease: "easeOut" }}
         >
-          {pages[activePage]}
+          <Routes location={location}>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/expertise" element={<ExpertisePage />} />
+            <Route path="/work" element={<WorkPage />} />
+            <Route path="/experience" element={<ExperiencePage />} />
+            <Route path="/credentials" element={<CredentialsPage />} />
+            <Route path="/contact" element={<ContactPage />} />
+          </Routes>
         </motion.div>
       </AnimatePresence>
 
