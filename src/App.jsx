@@ -1,16 +1,17 @@
+import { lazy, Suspense, useEffect, useState } from "react";
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
 
 import HRLogo from "./components/HRLogo.jsx";
-import HomePage from "./pages/HomePage.jsx";
-import ExpertisePage from "./pages/ExpertisePage.jsx";
-import WorkPage from "./pages/WorkPage.jsx";
-import ExperiencePage from "./pages/ExperiencePage.jsx";
-import CredentialsPage from "./pages/CredentialsPage.jsx";
-import ContactPage from "./pages/ContactPage.jsx";
 import { navItems, profile } from "./data/index.js";
 import { openResume } from "./utils/resume.js";
-import { useEffect, useState } from "react";
+
+const HomePage = lazy(() => import("./pages/HomePage.jsx"));
+const ExpertisePage = lazy(() => import("./pages/ExpertisePage.jsx"));
+const WorkPage = lazy(() => import("./pages/WorkPage.jsx"));
+const ExperiencePage = lazy(() => import("./pages/ExperiencePage.jsx"));
+const CredentialsPage = lazy(() => import("./pages/CredentialsPage.jsx"));
+const ContactPage = lazy(() => import("./pages/ContactPage.jsx"));
+const ErrorPage = lazy(() => import("./pages/ErrorPage.jsx"));
 
 const routeMap = {
   home:        "/",
@@ -21,10 +22,50 @@ const routeMap = {
   contact:     "/contact",
 };
 
+function RouteSplash() {
+  return (
+    <div className="route-splash" role="status" aria-live="polite" aria-label="Loading page">
+      <div className="splash-card">
+        <div className="splash-mark">
+          <span>AEM</span>
+          <i aria-hidden="true" />
+        </div>
+        <div className="splash-orbit" aria-hidden="true">
+          <span className="splash-node splash-node-a">EDS</span>
+          <span className="splash-node splash-node-b">CDN</span>
+          <span className="splash-node splash-node-c">AJO</span>
+        </div>
+        <div className="splash-copy">
+          <strong>Adobe Experience Cloud</strong>
+          <span>Loading enterprise AEM delivery portfolio</span>
+        </div>
+        <div className="splash-progress" aria-hidden="true">
+          <span />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function App() {
   const navigate = useNavigate();
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [showInitialSplash, setShowInitialSplash] = useState(true);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, [location.pathname]);
+
+  useEffect(() => {
+    const splashTimer = window.setTimeout(() => setShowInitialSplash(false), 1000);
+    return () => window.clearTimeout(splashTimer);
+  }, []);
+
+  useEffect(() => {
+    document.body.classList.toggle("app-splash-open", showInitialSplash);
+    return () => document.body.classList.remove("app-splash-open");
+  }, [showInitialSplash]);
 
   useEffect(() => {
     document.body.classList.toggle("mobile-nav-open", menuOpen);
@@ -42,6 +83,11 @@ export default function App() {
 
   return (
     <main className="portfolio-light">
+      {showInitialSplash && (
+        <div className="initial-splash" aria-label="Loading portfolio">
+          <RouteSplash />
+        </div>
+      )}
 
       {/* ── Header ── */}
       <header className="header">
@@ -96,23 +142,14 @@ export default function App() {
       </header>
 
       {/* ── Mobile full-screen overlay ── */}
-      <AnimatePresence>
-        {menuOpen && (
-          <motion.div
+      {menuOpen && (
+          <div
             className="mobile-overlay"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.22 }}
             onClick={() => setMenuOpen(false)}
           >
-            <motion.nav
+            <nav
               id="mobile-nav"
               className="mobile-nav"
-              initial={{ x: 34, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              exit={{ x: 24, opacity: 0 }}
-              transition={{ duration: 0.28, ease: "easeOut" }}
               aria-label="Mobile navigation"
               onClick={(event) => event.stopPropagation()}
             >
@@ -121,54 +158,44 @@ export default function App() {
                 <strong>Hanu Reddy</strong>
               </div>
               {navItems.map((item, i) => (
-                <motion.button
+                <button
                   key={item.id}
                   type="button"
                   onClick={() => handleNavClick(item.id)}
                   className={`mobile-nav-link button-reset${activeId === item.id ? " active" : ""}`}
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.06 + i * 0.06 }}
                 >
                   <span className="mnl-num">{String(i + 1).padStart(2, "0")}</span>
                   {item.label}
-                </motion.button>
+                </button>
               ))}
-              <motion.button
+              <button
                 type="button"
                 onClick={() => { openResume(); setMenuOpen(false); }}
                 className="mobile-resume-btn button-reset"
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.42 }}
               >
                 Download Resume
-              </motion.button>
-            </motion.nav>
-          </motion.div>
+              </button>
+            </nav>
+          </div>
         )}
-      </AnimatePresence>
 
       {/* ── Page content ── */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={location.pathname}
-          className="page-transition"
-          initial={{ opacity: 0, y: 16, filter: "blur(5px)" }}
-          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          exit={{ opacity: 0, y: -12, filter: "blur(5px)" }}
-          transition={{ duration: 0.34, ease: "easeOut" }}
-        >
-          <Routes location={location}>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/expertise" element={<ExpertisePage />} />
-            <Route path="/work" element={<WorkPage />} />
-            <Route path="/experience" element={<ExperiencePage />} />
-            <Route path="/credentials" element={<CredentialsPage />} />
-            <Route path="/contact" element={<ContactPage />} />
-          </Routes>
-        </motion.div>
-      </AnimatePresence>
+        <div className="page-transition">
+          <Suspense fallback={<RouteSplash />}>
+            <Routes location={location}>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/expertise" element={<ExpertisePage />} />
+              <Route path="/work" element={<WorkPage />} />
+              <Route path="/experience" element={<ExperiencePage />} />
+              <Route path="/credentials" element={<CredentialsPage />} />
+              <Route path="/contact" element={<ContactPage />} />
+              <Route path="/400" element={<ErrorPage code={400} />} />
+              <Route path="/500" element={<ErrorPage code={500} />} />
+              <Route path="/error" element={<ErrorPage code={500} />} />
+              <Route path="*" element={<ErrorPage code={404} />} />
+            </Routes>
+          </Suspense>
+        </div>
 
       <footer className="footer">
         <span>{profile.name} — {profile.role}</span>

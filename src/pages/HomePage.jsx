@@ -7,10 +7,10 @@ import { openResume } from "../utils/resume.js";
 const companies = ["HD Supply", "American Express", "Verizon", "PeakActivity", "Cummins"];
 
 const stack = [
-  { label: "Content Management", value: "AEM Cloud · Edge Delivery", color: "#b4232a" },
-  { label: "Data Platform",       value: "AEP · Real-Time CDP",       color: "#4f7d6b" },
-  { label: "Journey Layer",       value: "AJO · Offer Decisioning",   color: "#b8792b" },
-  { label: "Frontend Delivery",   value: "React · SPA Editor",        color: "#b4232a" },
+  { label: "Content Management", value: "AEM Cloud · Edge Delivery", color: "#9f1f2a" },
+  { label: "Data Platform",       value: "AEP · Real-Time CDP",       color: "#4d7a69" },
+  { label: "Journey Layer",       value: "AJO · Offer Decisioning",   color: "#a86f25" },
+  { label: "Frontend Delivery",   value: "React · SPA Editor",        color: "#9f1f2a" },
 ];
 
 const deliveryFlow = [
@@ -84,6 +84,7 @@ const impactMetrics = metrics.map((metric, index) => ({
 export default function HomePage() {
   const navigate = useNavigate();
   const [activeMetric, setActiveMetric] = useState(1);
+  const [flippedMetric, setFlippedMetric] = useState(null);
   const activeImpact = impactMetrics[activeMetric];
 
   return (
@@ -325,14 +326,22 @@ export default function HomePage() {
             {impactMetrics.map((metric, index) => (
               <motion.div
                 key={metric.label}
-                className={`impact-metric flip-metric${activeMetric === index ? " is-active" : ""}`}
+                className={`impact-metric flip-metric${activeMetric === index ? " is-active" : ""}${flippedMetric === index ? " is-flipped" : ""}`}
                 initial={{ opacity: 0, x: 28 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true, amount: 0.4 }}
                 transition={{ duration: 0.4, delay: 0.08 * index }}
                 tabIndex={0}
-                onMouseEnter={() => setActiveMetric(index)}
-                onFocus={() => setActiveMetric(index)}
+                onMouseEnter={() => {
+                  setActiveMetric(index);
+                  setFlippedMetric(index);
+                }}
+                onMouseLeave={() => setFlippedMetric(null)}
+                onFocus={() => {
+                  setActiveMetric(index);
+                  setFlippedMetric(index);
+                }}
+                onBlur={() => setFlippedMetric(null)}
               >
                 <div className="flip-metric-inner">
                   <div className="metric-face metric-front">

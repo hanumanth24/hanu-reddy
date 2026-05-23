@@ -31,7 +31,6 @@ async function clearStaleAssetCache() {
   }
 
   window.localStorage.setItem('portfolio-app-version', APP_VERSION);
-  window.location.reload();
 }
 
 clearStaleAssetCache().catch(() => {
