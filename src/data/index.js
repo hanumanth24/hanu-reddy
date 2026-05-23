@@ -12,12 +12,15 @@ export const profile = {
 };
 
 export const navItems = [
-  { id: "home", label: "Home" },
-  { id: "expertise", label: "Expertise" },
-  { id: "work", label: "Work" },
-  { id: "experience", label: "Experience" },
-  { id: "credentials", label: "Credentials" },
-  { id: "contact", label: "Contact" },
+  { id: "home",         label: "Home" },
+  { id: "about",        label: "About" },
+  { id: "expertise",    label: "Expertise" },
+  { id: "architecture", label: "Architecture" },
+  { id: "work",         label: "Projects" },
+  { id: "experience",   label: "Experience" },
+  { id: "credentials",  label: "Certifications" },
+  { id: "blog",         label: "Blog" },
+  { id: "contact",      label: "Contact" },
 ];
 
 // Fixed: AEM uses "M", AJO uses "J", AEP uses "P", avoiding duplicate "A" icons

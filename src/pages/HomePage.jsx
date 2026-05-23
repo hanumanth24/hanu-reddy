@@ -1,8 +1,19 @@
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { certifications, metrics } from "../data/index.js";
 import { openResume } from "../utils/resume.js";
+
+const rotatingPhrases = [
+  "Enterprise Architecture",
+  "Adobe Experience Cloud",
+  "React Engineering",
+  "Cloud Platforms",
+  "AI-Driven Systems",
+  "Experimentation Platforms",
+  "Headless CMS",
+  "Martech Systems",
+];
 
 const companies = ["HD Supply", "American Express", "Verizon", "PeakActivity", "Cummins"];
 
@@ -83,9 +94,17 @@ const impactMetrics = metrics.map((metric, index) => ({
 
 export default function HomePage() {
   const navigate = useNavigate();
-  const [activeMetric, setActiveMetric] = useState(1);
+  const [activeMetric, setActiveMetric]   = useState(1);
   const [flippedMetric, setFlippedMetric] = useState(null);
+  const [phraseIndex, setPhraseIndex]     = useState(0);
   const activeImpact = impactMetrics[activeMetric];
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setPhraseIndex((i) => (i + 1) % rotatingPhrases.length);
+    }, 2400);
+    return () => clearInterval(id);
+  }, []);
 
   return (
     <div className="home-dark">
@@ -119,6 +138,23 @@ export default function HomePage() {
           >
             Adobe Experience Cloud Engineer
           </motion.span>
+
+          {/* Rotating expertise label */}
+          <div className="hero-rotate-wrap" aria-live="polite" aria-label="Current expertise">
+            <span className="hero-rotate-prefix">—</span>
+            <AnimatePresence mode="wait">
+              <motion.span
+                key={phraseIndex}
+                className="hero-rotate-text"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.32 }}
+              >
+                {rotatingPhrases[phraseIndex]}
+              </motion.span>
+            </AnimatePresence>
+          </div>
 
           <motion.h1
             className="hero-dark-h1"
