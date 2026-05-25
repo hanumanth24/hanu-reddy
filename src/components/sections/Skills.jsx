@@ -1,8 +1,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { SKILLS, CERTIFICATIONS } from "@/lib/data";
-import { Award } from "lucide-react";
+import { SKILLS } from "@/lib/data";
 import NodeGraphCanvas from "@/components/three/NodeGraphCanvas";
 import LazyMount from "@/components/LazyMount";
 import useTitleReveal from "@/hooks/useTitleReveal";
@@ -197,23 +196,6 @@ export default function Skills() {
         }
       );
 
-      // Cert cards
-      gsap.fromTo(
-        section.querySelectorAll("[data-cert-card]"),
-        { opacity: 0, x: -24 },
-        {
-          opacity: 1,
-          x: 0,
-          duration: 0.7,
-          ease: "expo.out",
-          stagger: 0.12,
-          scrollTrigger: {
-            trigger: section.querySelector("[data-certs]"),
-            start: "top 82%",
-            once: true,
-          },
-        }
-      );
     }, section);
 
     return () => ctx.revert();
@@ -399,36 +381,21 @@ export default function Skills() {
           ))}
         </div>
 
-        {/* ── Certifications ── */}
-        <div data-certs>
-          <div className="flex items-center gap-4 mb-8">
-            <span className="section-label">[ 05 / ADOBE CERTIFIED ]</span>
-            <span className="flex-1 h-px bg-zinc-800" />
+        {/* ── Certifications CTA ── */}
+        <div className="border border-zinc-800 p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 hover:border-zinc-700 transition-colors">
+          <div>
+            <div className="font-mono text-[9px] tracking-[0.35em] text-zinc-600 mb-2">[ 05 / ADOBE CERTIFIED ]</div>
+            <div className="font-display uppercase font-semibold text-white text-2xl md:text-3xl leading-tight">
+              2× Adobe Certified <span className="text-[#E5FE40]">Professional.</span>
+            </div>
+            <div className="font-mono text-xs text-zinc-500 mt-2">Journey Optimizer · Real-Time CDP</div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {CERTIFICATIONS.map((c, i) => (
-              <div
-                key={c.title}
-                data-cert-card
-                data-testid={`cert-card-${i}`}
-                data-cursor="hover"
-                className="brutal-box p-8 flex items-start gap-5 hover:border-[#E5FE40] transition-colors group bg-[#080808]/70"
-                style={{ opacity: 0 }}
-              >
-                <div className="w-14 h-14 border border-zinc-700 flex items-center justify-center shrink-0 group-hover:border-[#E5FE40] group-hover:bg-[#E5FE40]/5 transition-all">
-                  <Award size={22} strokeWidth={1.5} className="text-[#E5FE40]" />
-                </div>
-                <div>
-                  <div className="font-mono text-[10px] tracking-[0.3em] text-zinc-500 mb-2">
-                    {c.issuer}
-                  </div>
-                  <div className="font-display uppercase font-semibold text-white text-xl leading-tight">
-                    {c.title}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+          <a
+            href="/skills"
+            className="btn-brutal shrink-0 whitespace-nowrap"
+          >
+            VIEW SKILLS PAGE ↗
+          </a>
         </div>
       </div>
     </section>

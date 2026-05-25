@@ -2,6 +2,9 @@ import "@/App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Portfolio from "@/pages/Portfolio";
 import CaseStudy from "@/pages/CaseStudy";
+import AchievementsPage from "@/pages/AchievementsPage";
+import SkillsPage from "@/pages/SkillsPage";
+import ResumePage from "@/pages/ResumePage";
 import PageTransition from "@/components/PageTransition";
 import { Toaster } from "sonner";
 import { bootAnalytics } from "@/lib/analytics";
@@ -37,6 +40,9 @@ function App() {
         <Routes>
           <Route path="/" element={<Portfolio />} />
           <Route path="/work/:slug" element={<CaseStudy />} />
+          <Route path="/achievements" element={<AchievementsPage />} />
+          <Route path="/skills" element={<SkillsPage />} />
+          <Route path="/resume" element={<ResumePage />} />
         </Routes>
       </BrowserRouter>
       <Toaster

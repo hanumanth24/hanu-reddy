@@ -1,14 +1,21 @@
 import { useEffect, useState } from "react";
+import { useLocation, useNavigate, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
 import { events } from "@/lib/analytics";
 import { openCalendly } from "@/lib/calendly";
 
-const LINKS = [
-  { label: "ABOUT", href: "#about" },
-  { label: "WORK", href: "#projects" },
-  { label: "EXPERIENCE", href: "#experience" },
-  { label: "SKILLS", href: "#skills" },
-  { label: "CONTACT", href: "#contact" },
+// Anchor links scroll on "/" — on other pages navigate to "/#section"
+const ANCHOR_LINKS = [
+  { label: "ABOUT",    href: "#about" },
+  { label: "WORK",     href: "#projects" },
+  { label: "SKILLS",   href: "#skills" },
+  { label: "CONTACT",  href: "#contact" },
+];
+
+// Page links — always use router navigation
+const PAGE_LINKS = [
+  { label: "RESUME",       to: "/resume" },
+  { label: "ACHIEVEMENTS", to: "/achievements" },
 ];
 
 // Letter-doubling hover: render each char twice in a clipped column so the
@@ -46,6 +53,9 @@ function HoverText({ children, className = "" }) {
 export default function Navigation() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const isHome = location.pathname === "/";
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -53,12 +63,16 @@ export default function Navigation() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const handleClick = (e, href, label) => {
+  const handleAnchorClick = (e, href, label) => {
     e.preventDefault();
     setOpen(false);
     if (label) events.navClick(label);
-    const el = document.querySelector(href);
-    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (isHome) {
+      const el = document.querySelector(href);
+      if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+    } else {
+      navigate("/" + href);
+    }
   };
 
   return (
@@ -72,8 +86,8 @@ export default function Navigation() {
     >
       <div className="max-w-[1600px] mx-auto px-5 md:px-10 py-4 md:py-5 flex items-center justify-between">
         <a
-          href="#hero"
-          onClick={(e) => handleClick(e, "#hero")}
+          href={isHome ? "#hero" : "/"}
+          onClick={(e) => isHome ? handleAnchorClick(e, "#hero") : null}
           data-testid="nav-logo"
           className="flex items-center gap-3"
         >
@@ -84,23 +98,36 @@ export default function Navigation() {
         </a>
 
         <div className="hidden md:flex items-center gap-1">
-          {LINKS.map((l) => (
+          {ANCHOR_LINKS.map((l) => (
             <a
               key={l.href}
-              href={l.href}
-              onClick={(e) => handleClick(e, l.href, l.label)}
+              href={isHome ? l.href : "/" + l.href}
+              onClick={(e) => handleAnchorClick(e, l.href, l.label)}
               data-testid={`nav-link-${l.label.toLowerCase()}`}
-              className="group px-4 py-2 font-mono text-xs tracking-[0.2em] text-zinc-300 hover:text-zinc-300 transition-colors"
+              className="group px-3 py-2 font-mono text-xs tracking-[0.2em] text-zinc-300 hover:text-zinc-300 transition-colors"
             >
               <span className="text-[#E5FE40] mr-1">/</span>
               <HoverText>{l.label}</HoverText>
             </a>
           ))}
+          {PAGE_LINKS.map((l) => (
+            <Link
+              key={l.to}
+              to={l.to}
+              onClick={() => setOpen(false)}
+              className={`group px-3 py-2 font-mono text-xs tracking-[0.2em] transition-colors ${
+                location.pathname === l.to ? "text-[#E5FE40]" : "text-zinc-300"
+              }`}
+            >
+              <span className="text-[#E5FE40] mr-1">/</span>
+              <HoverText>{l.label}</HoverText>
+            </Link>
+          ))}
           <button
             type="button"
             onClick={() => openCalendly("nav")}
             data-testid="nav-cta"
-            className="ml-4 btn-brutal group"
+            className="ml-3 btn-brutal group"
           >
             <HoverText>HIRE ME</HoverText>
           </button>
@@ -134,17 +161,30 @@ export default function Navigation() {
             className="md:hidden border-t border-zinc-800 bg-[#050505]"
           >
             <div className="px-6 py-6 flex flex-col gap-2">
-              {LINKS.map((l) => (
+              {ANCHOR_LINKS.map((l) => (
                 <a
                   key={l.href}
-                  href={l.href}
-                  onClick={(e) => handleClick(e, l.href, l.label)}
+                  href={isHome ? l.href : "/" + l.href}
+                  onClick={(e) => handleAnchorClick(e, l.href, l.label)}
                   data-testid={`nav-mobile-link-${l.label.toLowerCase()}`}
                   className="py-3 font-mono text-sm tracking-[0.2em] text-white border-b border-zinc-900"
                 >
                   <span className="text-[#E5FE40] mr-2">/</span>
                   {l.label}
                 </a>
+              ))}
+              {PAGE_LINKS.map((l) => (
+                <Link
+                  key={l.to}
+                  to={l.to}
+                  onClick={() => setOpen(false)}
+                  className={`py-3 font-mono text-sm tracking-[0.2em] border-b border-zinc-900 ${
+                    location.pathname === l.to ? "text-[#E5FE40]" : "text-white"
+                  }`}
+                >
+                  <span className="text-[#E5FE40] mr-2">/</span>
+                  {l.label}
+                </Link>
               ))}
             </div>
           </motion.div>

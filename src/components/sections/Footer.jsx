@@ -135,7 +135,7 @@ export default function Footer() {
             clipPath: "inset(0 100% 0 0)",
           }}
         >
-          BARLA.<span className="text-[#E5FE40]">_</span>
+          <span className="text-[#E5FE40]">BARLA._</span>
         </h2>
 
         {/* Footer links */}

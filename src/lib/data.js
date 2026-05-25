@@ -462,3 +462,62 @@ export const TESTIMONIALS = [
     company: "Global B2B",
   },
 ];
+
+export const ACHIEVEMENTS = [
+  {
+    year: "2026",
+    tag: "DELIVERY",
+    title: "AEM Cloud + EDS Modernization",
+    detail: "Led HD Supply's migration to AEM as a Cloud Service with Edge Delivery Services. 50% faster page loads and 25% engagement uplift across commerce surfaces.",
+    color: "#E5FE40",
+  },
+  {
+    year: "2025",
+    tag: "CERTIFICATION",
+    title: "Adobe Certified Journey Optimizer",
+    detail: "Adobe Certified Professional — Journey Optimizer Business Practitioner. First-attempt pass covering event journeys, offer decisioning, and cross-channel flows.",
+    color: "#4ade80",
+  },
+  {
+    year: "2025",
+    tag: "CERTIFICATION",
+    title: "Adobe Certified RT-CDP",
+    detail: "Adobe Certified Professional — Real-Time CDP Business Practitioner. Identity resolution, audience segments, profile activation, and data governance.",
+    color: "#4ade80",
+  },
+  {
+    year: "2024",
+    tag: "ARCHITECTURE",
+    title: "AEP Identity Resolution at Scale",
+    detail: "Designed the enterprise identity namespace map (ECID + Email + CRMID) and authored AEP merge policies for GDPR/CCPA compliance across 10+ source connectors.",
+    color: "#a78bfa",
+  },
+  {
+    year: "2024",
+    tag: "PLATFORM",
+    title: "Journey Optimizer Orchestration",
+    detail: "Deployed AJO + RT-CDP event-triggered journeys — cart-abandon, browse-abandon, post-purchase — with real-time profile activation and offer decisioning.",
+    color: "#ff9a3c",
+  },
+  {
+    year: "2022",
+    tag: "PERFORMANCE",
+    title: "American Express CDN Overhaul",
+    detail: "Re-tiered global CDN topology for a Fortune 500 financial property. Achieved 30% latency drop and zero critical security findings post-audit.",
+    color: "#60a5fa",
+  },
+  {
+    year: "2021",
+    tag: "PERFORMANCE",
+    title: "Adaptive Video Streaming Pipeline",
+    detail: "Designed AEM DAM-driven HLS + DASH adaptive bitrate streaming for HD Supply product training content. 40% buffer time reduction.",
+    color: "#60a5fa",
+  },
+  {
+    year: "2019",
+    tag: "DELIVERY",
+    title: "Multi-Brand SPA Editor Rollout",
+    detail: "Built React micro-frontends on AEM SPA Editor SDK for Verizon — 5+ brands, zero engineering tickets per author content edit, <1 day time-to-launch for regional variants.",
+    color: "#E5FE40",
+  },
+];
