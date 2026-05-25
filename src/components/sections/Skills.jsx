@@ -1,0 +1,421 @@
+import { useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { SKILLS, CERTIFICATIONS } from "@/lib/data";
+import { Award } from "lucide-react";
+import NodeGraphCanvas from "@/components/three/NodeGraphCanvas";
+import useTitleReveal from "@/hooks/useTitleReveal";
+
+gsap.registerPlugin(ScrollTrigger);
+
+// Adobe product nodes — colors mirror the 3D graph exactly
+const ADOBE_PRODUCTS = [
+  {
+    id: "aem",
+    name: "AEM CLOUD",
+    color: "#E5FE40",
+    tag: "CMS / DXP",
+    desc: "Sling Models · HTL · SPA Editor · DAM · OSGi · Dispatcher",
+  },
+  {
+    id: "ajo",
+    name: "JOURNEY OPTIMIZER",
+    color: "#ff9a3c",
+    tag: "ORCHESTRATION",
+    desc: "Event journeys · Offer decisioning · Cross-channel flows",
+  },
+  {
+    id: "rtcdp",
+    name: "RT-CDP",
+    color: "#a78bfa",
+    tag: "DATA PLATFORM",
+    desc: "Identity resolution · Audience segments · Profile activation",
+  },
+  {
+    id: "eds",
+    name: "EDGE DELIVERY",
+    color: "#4ade80",
+    tag: "PERFORMANCE",
+    desc: "<200ms TTFB · CDN-first · Headless authoring at the edge",
+  },
+  {
+    id: "cja",
+    name: "CJA",
+    color: "#60a5fa",
+    tag: "ANALYTICS",
+    desc: "Cross-channel attribution · Stitched datasets · Workspace",
+  },
+  {
+    id: "analytics",
+    name: "ANALYTICS",
+    color: "#f87171",
+    tag: "MEASUREMENT",
+    desc: "eVars · ACDL data layer · Launch tags · Funnels",
+  },
+  {
+    id: "launch",
+    name: "ADOBE LAUNCH",
+    color: "#facc15",
+    tag: "TAG MANAGEMENT",
+    desc: "Rules engine · Extensions · Data layer · ACDL",
+  },
+];
+
+function MagneticTag({ children }) {
+  const ref = useRef(null);
+
+  const onMove = (e) => {
+    const el = ref.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    gsap.to(el, {
+      x: (e.clientX - cx) * 0.25,
+      y: (e.clientY - cy) * 0.25,
+      duration: 0.2,
+      ease: "power2.out",
+    });
+  };
+
+  const onLeave = () =>
+    gsap.to(ref.current, { x: 0, y: 0, duration: 0.4, ease: "elastic.out(1, 0.4)" });
+
+  return (
+    <span
+      ref={ref}
+      data-cursor="hover"
+      className="brutal-tag text-zinc-300 cursor-default select-none inline-block"
+      onMouseMove={onMove}
+      onMouseLeave={onLeave}
+    >
+      {children}
+    </span>
+  );
+}
+
+export default function Skills() {
+  const titleRef = useRef(null);
+  const sectionRef = useRef(null);
+  const graphRef = useRef(null);
+  const mouse = useRef({ x: 0, y: 0 });
+  useTitleReveal(titleRef);
+
+  useEffect(() => {
+    const onMove = (e) => {
+      mouse.current.x = (e.clientX / window.innerWidth) * 2 - 1;
+      mouse.current.y = (e.clientY / window.innerHeight) * 2 - 1;
+    };
+    window.addEventListener("mousemove", onMove);
+    return () => window.removeEventListener("mousemove", onMove);
+  }, []);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const ctx = gsap.context(() => {
+      // Graph: fade + scale in
+      gsap.fromTo(
+        graphRef.current,
+        { opacity: 0, scale: 0.96 },
+        {
+          opacity: 1,
+          scale: 1,
+          duration: 1.2,
+          ease: "expo.out",
+          scrollTrigger: { trigger: graphRef.current, start: "top 82%", once: true },
+        }
+      );
+
+      // Legend chips: stagger after graph trigger, simulate "boot-up"
+      gsap.fromTo(
+        section.querySelectorAll("[data-legend-chip]"),
+        { opacity: 0, x: 14 },
+        {
+          opacity: 1,
+          x: 0,
+          duration: 0.45,
+          ease: "expo.out",
+          stagger: 0.09,
+          delay: 0.5,
+          scrollTrigger: { trigger: graphRef.current, start: "top 78%", once: true },
+        }
+      );
+
+      // Status bar items
+      gsap.fromTo(
+        section.querySelectorAll("[data-status-item]"),
+        { opacity: 0 },
+        {
+          opacity: 1,
+          duration: 0.4,
+          stagger: 0.1,
+          delay: 0.9,
+          scrollTrigger: { trigger: graphRef.current, start: "top 78%", once: true },
+        }
+      );
+
+      // Product cards: stagger up
+      gsap.fromTo(
+        section.querySelectorAll("[data-product-card]"),
+        { opacity: 0, y: 36 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          ease: "expo.out",
+          stagger: 0.065,
+          scrollTrigger: {
+            trigger: section.querySelector("[data-products-grid]"),
+            start: "top 80%",
+            once: true,
+          },
+        }
+      );
+
+      // Skill group cards
+      gsap.fromTo(
+        section.querySelectorAll("[data-skill-group]"),
+        { opacity: 0, y: 28 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.65,
+          ease: "expo.out",
+          stagger: 0.08,
+          scrollTrigger: {
+            trigger: section.querySelector("[data-skills-grid]"),
+            start: "top 78%",
+            once: true,
+          },
+        }
+      );
+
+      // Cert cards
+      gsap.fromTo(
+        section.querySelectorAll("[data-cert-card]"),
+        { opacity: 0, x: -24 },
+        {
+          opacity: 1,
+          x: 0,
+          duration: 0.7,
+          ease: "expo.out",
+          stagger: 0.12,
+          scrollTrigger: {
+            trigger: section.querySelector("[data-certs]"),
+            start: "top 82%",
+            once: true,
+          },
+        }
+      );
+    }, section);
+
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <section
+      ref={sectionRef}
+      id="skills"
+      data-testid="skills-section"
+      className="relative px-6 md:px-12 py-24 md:py-36 border-t border-zinc-900 bg-[#080808] overflow-hidden"
+    >
+      <div className="absolute inset-0 grid-noise opacity-[0.04] pointer-events-none" />
+
+      <div className="relative z-10 max-w-[1600px] mx-auto">
+
+        {/* ── Header ── */}
+        <div className="flex items-center gap-4 mb-12">
+          <span className="section-label">[ 04 / TECHNICAL ARSENAL ]</span>
+          <span className="flex-1 h-px bg-zinc-800" />
+        </div>
+
+        {/* ── Title row ── */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14">
+          <h2
+            ref={titleRef}
+            className="font-display uppercase font-semibold text-white leading-[0.9]"
+            style={{ fontSize: "clamp(2.2rem, 6vw, 5.5rem)" }}
+          >
+            The <span className="text-[#E5FE40]">Stack.</span>
+          </h2>
+          <p className="font-mono text-[10px] text-zinc-500 tracking-[0.15em] max-w-sm md:text-right leading-loose">
+            6 YEARS AEM DEPTH · FULL ADOBE CLOUD BREADTH
+            <br />AEP · AJO · RT-CDP · CJA · EDS · ANALYTICS
+          </p>
+        </div>
+
+        {/* ── Adobe Topology Canvas ── */}
+        <div
+          ref={graphRef}
+          className="relative border border-zinc-800 overflow-hidden h-[300px] md:h-[420px] lg:h-[520px]"
+          style={{ opacity: 0 }}
+        >
+          <NodeGraphCanvas mouse={mouse} />
+
+          {/* Corner frame accents */}
+          <div className="absolute top-0 left-0 w-5 h-5 border-t-2 border-l-2 border-[#E5FE40]/60 pointer-events-none" />
+          <div className="absolute top-0 right-0 w-5 h-5 border-t-2 border-r-2 border-[#E5FE40]/60 pointer-events-none" />
+          <div className="absolute bottom-0 left-0 w-5 h-5 border-b-2 border-l-2 border-[#E5FE40]/60 pointer-events-none" />
+          <div className="absolute bottom-0 right-0 w-5 h-5 border-b-2 border-r-2 border-[#E5FE40]/60 pointer-events-none" />
+
+          {/* HUD top-left */}
+          <div className="absolute top-4 left-6 flex items-center gap-2 pointer-events-none">
+            <span className="w-1.5 h-1.5 bg-[#E5FE40] rounded-full animate-pulse" />
+            <span className="font-mono text-[8px] tracking-[0.4em] text-[#E5FE40]">
+              ADOBE EXPERIENCE CLOUD · LIVE TOPOLOGY
+            </span>
+          </div>
+
+          {/* HUD top-right: product legend — hidden on mobile to avoid overlap */}
+          <div className="hidden md:flex absolute top-10 right-5 flex-col gap-2 items-end pointer-events-none">
+            <span className="font-mono text-[7px] tracking-[0.35em] text-zinc-600 mb-1">NODES</span>
+            {ADOBE_PRODUCTS.map((p) => (
+              <div
+                key={p.id}
+                data-legend-chip
+                className="flex items-center gap-2"
+                style={{ opacity: 0 }}
+              >
+                <span
+                  className="font-mono text-[8px] tracking-[0.2em]"
+                  style={{ color: p.color }}
+                >
+                  {p.name}
+                </span>
+                <span
+                  className="w-1.5 h-1.5 rounded-full shrink-0"
+                  style={{ backgroundColor: p.color }}
+                />
+              </div>
+            ))}
+          </div>
+
+          {/* HUD bottom: status bar */}
+          <div className="absolute bottom-0 left-0 right-0 border-t border-zinc-800/70 bg-[#050505]/80 px-4 md:px-6 py-2 flex items-center gap-3 md:gap-6 pointer-events-none">
+            <span data-status-item className="font-mono text-[7px] tracking-[0.3em] text-[#E5FE40]" style={{ opacity: 0 }}>
+              ● LIVE
+            </span>
+            <span data-status-item className="hidden sm:inline font-mono text-[7px] tracking-[0.25em] text-zinc-500" style={{ opacity: 0 }}>
+              NODES: 08
+            </span>
+            <span data-status-item className="hidden sm:inline font-mono text-[7px] tracking-[0.25em] text-zinc-500" style={{ opacity: 0 }}>
+              EDGES: 13
+            </span>
+            <span data-status-item className="hidden md:inline font-mono text-[7px] tracking-[0.25em] text-zinc-500" style={{ opacity: 0 }}>
+              BIDIRECTIONAL DATA FLOW
+            </span>
+            <span data-status-item className="ml-auto font-mono text-[7px] tracking-[0.25em] text-zinc-600" style={{ opacity: 0 }}>
+              AEC TOPOLOGY / 3D
+            </span>
+          </div>
+        </div>
+
+        {/* ── Adobe Product Feature Cards ── */}
+        <div
+          data-products-grid
+          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-px bg-zinc-800 border border-zinc-800 border-t-0 mb-20"
+        >
+          {ADOBE_PRODUCTS.map((p) => (
+            <div
+              key={p.id}
+              data-product-card
+              data-cursor="hover"
+              className="p-5 flex flex-col gap-3 bg-[#080808] hover:bg-[#0d0d0d] transition-colors group"
+              style={{ opacity: 0 }}
+            >
+              {/* Color accent bar */}
+              <div className="h-[2px] w-7 transition-all duration-300 group-hover:w-full" style={{ backgroundColor: p.color }} />
+
+              {/* Product name */}
+              <div
+                className="font-mono text-[9px] font-bold tracking-[0.18em] leading-tight"
+                style={{ color: p.color }}
+              >
+                {p.name}
+              </div>
+
+              {/* Tag */}
+              <div className="font-mono text-[7px] tracking-[0.25em] text-zinc-600 uppercase border border-zinc-800 px-1.5 py-0.5 self-start">
+                {p.tag}
+              </div>
+
+              {/* Description */}
+              <div className="font-mono text-[8px] text-zinc-500 leading-relaxed mt-auto">
+                {p.desc}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* ── Full Stack Skills ── */}
+        <div className="flex items-center gap-4 mb-8">
+          <span className="section-label">[ FULL STACK SKILLS ]</span>
+          <span className="flex-1 h-px bg-zinc-800" />
+        </div>
+
+        <div
+          data-skills-grid
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-0 border-l border-t border-zinc-800 mb-20"
+        >
+          {SKILLS.map((group, idx) => (
+            <div
+              key={group.category}
+              data-skill-group
+              data-testid={`skill-group-${idx}`}
+              className="border-r border-b border-zinc-800 p-6 bg-[#080808]/70"
+              style={{ opacity: 0 }}
+            >
+              <div className="flex items-center justify-between mb-5">
+                <h3 className="font-mono text-[10px] tracking-[0.3em] text-[#E5FE40]">
+                  {group.category}
+                </h3>
+                <span className="font-mono text-[10px] text-zinc-600">
+                  {group.items.length.toString().padStart(2, "0")}
+                </span>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {group.items.map((item) => (
+                  <MagneticTag key={item}>{item}</MagneticTag>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* ── Certifications ── */}
+        <div data-certs>
+          <div className="flex items-center gap-4 mb-8">
+            <span className="section-label">[ 05 / ADOBE CERTIFIED ]</span>
+            <span className="flex-1 h-px bg-zinc-800" />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {CERTIFICATIONS.map((c, i) => (
+              <div
+                key={c.title}
+                data-cert-card
+                data-testid={`cert-card-${i}`}
+                data-cursor="hover"
+                className="brutal-box p-8 flex items-start gap-5 hover:border-[#E5FE40] transition-colors group bg-[#080808]/70"
+                style={{ opacity: 0 }}
+              >
+                <div className="w-14 h-14 border border-zinc-700 flex items-center justify-center shrink-0 group-hover:border-[#E5FE40] group-hover:bg-[#E5FE40]/5 transition-all">
+                  <Award size={22} strokeWidth={1.5} className="text-[#E5FE40]" />
+                </div>
+                <div>
+                  <div className="font-mono text-[10px] tracking-[0.3em] text-zinc-500 mb-2">
+                    {c.issuer}
+                  </div>
+                  <div className="font-display uppercase font-semibold text-white text-xl leading-tight">
+                    {c.title}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
