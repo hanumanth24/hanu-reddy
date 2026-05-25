@@ -1,254 +1,329 @@
-import { Canvas, useFrame } from "@react-three/fiber";
-import { useRef, useMemo, Suspense, createElement as h } from "react";
+import { useEffect, useRef } from "react";
 import * as THREE from "three";
+import gsap from "gsap";
 
-// ── Adobe Experience Cloud topology ──────────────────────────────────────────
-// Hub: Adobe Experience Cloud at center
-// Inner ring (r=1.8): AEM, AJO, RT-CDP
-// Outer ring (r=2.7): EDS, CJA, Analytics, Launch
-
-const R_IN = 1.8;
-const R_OUT = 2.7;
-
-function orbital(angle, radius, yOff = 0) {
-  const a = (angle * Math.PI) / 180;
-  return [Math.cos(a) * radius, yOff, Math.sin(a) * radius];
-}
-
-const HUB = { id: "hub", pos: [0, 0, 0], color: "#E5FE40", size: 0.28, label: "AEC" };
-
-const PRODUCT_NODES = [
-  // inner ring
-  { id: "aem",      pos: orbital(0,   R_IN,  0.10), color: "#E5FE40", size: 0.18, label: "AEM" },
-  { id: "ajo",      pos: orbital(120, R_IN,  0.05), color: "#ff9a3c", size: 0.16, label: "AJO" },
-  { id: "rtcdp",    pos: orbital(240, R_IN, -0.08), color: "#a78bfa", size: 0.16, label: "RT-CDP" },
-  // outer ring
-  { id: "eds",      pos: orbital(60,  R_OUT,  0.20), color: "#4ade80", size: 0.13, label: "EDS" },
-  { id: "cja",      pos: orbital(160, R_OUT,  0.00), color: "#60a5fa", size: 0.13, label: "CJA" },
-  { id: "analytics",pos: orbital(260, R_OUT, -0.15), color: "#f87171", size: 0.12, label: "ANALYTICS" },
-  { id: "launch",   pos: orbital(340, R_OUT,  0.10), color: "#facc15", size: 0.12, label: "LAUNCH" },
+const NODES = [
+  { id: "aep",       label: "AEP",           sub: "EXPERIENCE PLATFORM",  x:  0.0,  y:  0.3,  color: "#E5FE40", r: 0.30, primary: true },
+  { id: "aem",       label: "AEM CLOUD",     sub: "CONTENT HUB",          x: -3.2,  y:  0.3,  color: "#E5FE40", r: 0.22 },
+  { id: "rtcdp",     label: "RT-CDP",        sub: "REAL-TIME PROFILES",   x:  2.2,  y:  2.0,  color: "#a78bfa", r: 0.20 },
+  { id: "ajo",       label: "AJO",           sub: "JOURNEY OPTIMIZER",    x:  4.0,  y:  0.3,  color: "#ff9a3c", r: 0.20 },
+  { id: "cja",       label: "CJA",           sub: "JOURNEY ANALYTICS",    x:  5.4,  y:  2.0,  color: "#60a5fa", r: 0.18 },
+  { id: "eds",       label: "EDGE DELIVERY", sub: "CDN · <200ms TTFB",    x: -5.6,  y:  0.3,  color: "#4ade80", r: 0.18 },
+  { id: "analytics", label: "ANALYTICS",     sub: "MEASUREMENT LAYER",    x:  1.5,  y: -2.3,  color: "#f87171", r: 0.16 },
+  { id: "launch",    label: "LAUNCH",        sub: "TAG MANAGEMENT",       x:  4.0,  y: -2.3,  color: "#facc15", r: 0.15 },
 ];
 
-// Hub → every product; product cross-wires
+// Directed edges: from → to
 const EDGES = [
-  ["hub","aem"], ["hub","ajo"], ["hub","rtcdp"],
-  ["hub","eds"], ["hub","cja"], ["hub","analytics"], ["hub","launch"],
-  ["aem","eds"], ["ajo","rtcdp"], ["ajo","analytics"],
-  ["rtcdp","cja"], ["analytics","cja"], ["launch","aem"],
+  { from: "aem",       to: "aep",       color: "#E5FE40", label: "CONTENT DATA" },
+  { from: "aep",       to: "rtcdp",     color: "#a78bfa", label: "PROFILES" },
+  { from: "rtcdp",     to: "ajo",       color: "#a78bfa", label: "ACTIVATION" },
+  { from: "aep",       to: "cja",       color: "#60a5fa", label: "DATASETS" },
+  { from: "aem",       to: "eds",       color: "#4ade80", label: "DELIVERY" },
+  { from: "analytics", to: "aep",       color: "#f87171", label: "EVENTS" },
+  { from: "launch",    to: "aep",       color: "#facc15", label: "WEB DATA" },
+  { from: "ajo",       to: "analytics", color: "#ff9a3c", label: "OUTCOMES" },
 ];
 
-const ALL_NODES = [HUB, ...PRODUCT_NODES];
-const nodeById = Object.fromEntries(ALL_NODES.map((n) => [n.id, n]));
+const VIEW_H = 7.5;
+const EDGE_SEGS = 40;
 
-// ── Static edge lines ─────────────────────────────────────────────────────────
-function EdgeLines() {
-  const geo = useMemo(() => {
-    const pts = [];
-    EDGES.forEach(([a, b]) => {
-      pts.push(...nodeById[a].pos, ...nodeById[b].pos);
-    });
-    const g = new THREE.BufferGeometry();
-    g.setAttribute("position", new THREE.BufferAttribute(new Float32Array(pts), 3));
-    return g;
-  }, []);
-  return h("lineSegments", { geometry: geo },
-    h("lineBasicMaterial", { color: "#E5FE40", transparent: true, opacity: 0.14 })
-  );
+function makeNodeLabel(text, sub, color) {
+  const W = 280, H = 68;
+  const cv = document.createElement("canvas");
+  cv.width = W; cv.height = H;
+  const ctx = cv.getContext("2d");
+  ctx.font = "bold 20px monospace";
+  ctx.fillStyle = color;
+  ctx.fillText(text, 4, 26);
+  ctx.font = "10px monospace";
+  ctx.fillStyle = "#52525b";
+  ctx.fillText(sub, 4, 48);
+  const tex = new THREE.CanvasTexture(cv);
+  tex.minFilter = THREE.LinearFilter;
+  const mat = new THREE.SpriteMaterial({ map: tex, transparent: true, opacity: 0, depthWrite: false });
+  const spr = new THREE.Sprite(mat);
+  spr.scale.set(2.1, 0.51, 1);
+  return spr;
 }
 
-// ── Data-flow particle that travels from→to, looping ─────────────────────────
-function FlowParticle({ from, to, speed, phase, color }) {
-  const ref = useRef();
-  const f = useMemo(() => new THREE.Vector3(...from), []);
-  const t2 = useMemo(() => new THREE.Vector3(...to), []);
-
-  useFrame((state) => {
-    if (!ref.current) return;
-    const p = ((state.clock.getElapsedTime() * speed + phase) % 1 + 1) % 1;
-    ref.current.position.lerpVectors(f, t2, p);
-    ref.current.material.opacity = Math.sin(p * Math.PI) * 0.95;
-  });
-  return h("mesh", { ref },
-    h("sphereGeometry", { args: [0.035, 6, 6] }),
-    h("meshBasicMaterial", { color, transparent: true, opacity: 0, depthWrite: false })
-  );
-}
-
-function DataFlow() {
-  const particles = useMemo(() => {
-    const list = [];
-    EDGES.forEach(([a, b]) => {
-      const na = nodeById[a];
-      const nb = nodeById[b];
-      const color = na.color;
-      // 2 particles per edge (was 3), bidirectional
-      for (let i = 0; i < 2; i++) {
-        list.push({ from: na.pos, to: nb.pos, speed: 0.28 + Math.random() * 0.14, phase: i / 2, color });
-        list.push({ from: nb.pos, to: na.pos, speed: 0.22 + Math.random() * 0.12, phase: i / 2 + 0.5, color: nb.color });
-      }
-    });
-    return list;
-  }, []);
-
-  return h("group", null, ...particles.map((p, i) =>
-    h(FlowParticle, { key: i, ...p })
-  ));
-}
-
-// ── Hub: central glowing sphere + double ring ─────────────────────────────────
-function HubNode() {
-  const ringA = useRef();
-  const ringB = useRef();
-  const sphere = useRef();
-
-  useFrame((state) => {
-    const t = state.clock.getElapsedTime();
-    if (sphere.current) {
-      sphere.current.material.emissiveIntensity = 0.6 + Math.sin(t * 1.8) * 0.3;
-    }
-    if (ringA.current) {
-      const ta = (t * 0.4) % 1;
-      ringA.current.scale.setScalar(1 + ta * 2.8);
-      ringA.current.material.opacity = (1 - ta) * 0.5;
-    }
-    if (ringB.current) {
-      const tb = ((t * 0.4) + 0.5) % 1;
-      ringB.current.scale.setScalar(1 + tb * 2.8);
-      ringB.current.material.opacity = (1 - tb) * 0.5;
-    }
-  });
-
-  return h("group", null,
-    // glow sphere
-    h("mesh", { ref: sphere },
-      h("sphereGeometry", { args: [0.28, 32, 32] }),
-      h("meshStandardMaterial", {
-        color: "#E5FE40", roughness: 0.1, metalness: 0.9,
-        emissive: "#E5FE40", emissiveIntensity: 0.7,
-      })
-    ),
-    // pulsing rings
-    h("mesh", { ref: ringA },
-      h("ringGeometry", { args: [0.28, 0.30, 48] }),
-      h("meshBasicMaterial", { color: "#E5FE40", transparent: true, opacity: 0.5, side: THREE.DoubleSide, depthWrite: false })
-    ),
-    h("mesh", { ref: ringB },
-      h("ringGeometry", { args: [0.28, 0.30, 48] }),
-      h("meshBasicMaterial", { color: "#E5FE40", transparent: true, opacity: 0.5, side: THREE.DoubleSide, depthWrite: false })
-    )
-  );
-}
-
-// ── Product node: sphere + orbit ring + pulse ─────────────────────────────────
-function ProductNode({ node }) {
-  const sphereRef = useRef();
-  const pulseRef = useRef();
-  const phase = useMemo(() => Math.random() * Math.PI * 2, []);
-
-  useFrame((state) => {
-    const t = state.clock.getElapsedTime();
-    if (sphereRef.current) {
-      sphereRef.current.position.y = node.pos[1] + Math.sin(t * 0.7 + phase) * 0.07;
-      sphereRef.current.material.emissiveIntensity = 0.35 + Math.sin(t * 1.2 + phase) * 0.2;
-    }
-    if (pulseRef.current) {
-      const tp = ((t * 0.55 + phase) % 1 + 1) % 1;
-      pulseRef.current.scale.setScalar(1 + tp * 2.4);
-      pulseRef.current.material.opacity = (1 - tp) * 0.4;
-    }
-  });
-
-  return h("group", { position: node.pos },
-    // floating sphere (y managed in useFrame via ref)
-    h("mesh", { ref: sphereRef },
-      h("sphereGeometry", { args: [node.size, 24, 24] }),
-      h("meshStandardMaterial", {
-        color: node.color, roughness: 0.15, metalness: 0.85,
-        emissive: node.color, emissiveIntensity: 0.35,
-      })
-    ),
-    // sonar pulse ring
-    h("mesh", { ref: pulseRef },
-      h("ringGeometry", { args: [node.size, node.size + 0.01, 32] }),
-      h("meshBasicMaterial", { color: node.color, transparent: true, opacity: 0.4, side: THREE.DoubleSide, depthWrite: false })
-    )
-  );
-}
-
-// ── Orbit torus rings showing the two orbital paths ──────────────────────────
-function OrbitPath({ radius, yOff = 0 }) {
-  return h("mesh", { position: [0, yOff, 0], rotation: [Math.PI / 2, 0, 0] },
-    h("torusGeometry", { args: [radius, 0.003, 4, 120] }),
-    h("meshBasicMaterial", { color: "#27272a", transparent: true, opacity: 0.7 })
-  );
-}
-
-// ── Background starfield ──────────────────────────────────────────────────────
-function Stars() {
-  const ref = useRef();
-  const geo = useMemo(() => {
-    const arr = new Float32Array(500 * 3);
-    for (let i = 0; i < 500; i++) {
-      arr[i * 3]     = (Math.random() - 0.5) * 18;
-      arr[i * 3 + 1] = (Math.random() - 0.5) * 18;
-      arr[i * 3 + 2] = (Math.random() - 0.5) * 12 - 3;
-    }
-    const g = new THREE.BufferGeometry();
-    g.setAttribute("position", new THREE.BufferAttribute(arr, 3));
-    return g;
-  }, []);
-
-  useFrame((state) => {
-    if (ref.current) ref.current.rotation.y = state.clock.getElapsedTime() * 0.012;
-  });
-
-  return h("points", { ref, geometry: geo, frustumCulled: false },
-    h("pointsMaterial", { color: "#52525b", size: 0.03, transparent: true, opacity: 0.6, sizeAttenuation: true, depthWrite: false })
-  );
-}
-
-// ── Full scene ────────────────────────────────────────────────────────────────
-function Scene({ mouse }) {
-  const groupRef = useRef();
-
-  useFrame((state) => {
-    if (!groupRef.current) return;
-    groupRef.current.rotation.y += 0.0022;
-    groupRef.current.rotation.y += (mouse.current.x * 0.4 - groupRef.current.rotation.y) * 0.012;
-    groupRef.current.rotation.x += (-mouse.current.y * 0.15 - groupRef.current.rotation.x) * 0.012;
-  });
-
-  return h("group", null,
-    h("color", { attach: "background", args: ["#050505"] }),
-    h("ambientLight", { intensity: 0.5 }),
-    h("pointLight", { position: [0, 0, 4],  intensity: 2.0, color: "#E5FE40" }),
-    h("pointLight", { position: [4, 4, 2],  intensity: 0.8, color: "#ffffff" }),
-    h("pointLight", { position: [-4, -3, 1], intensity: 0.6, color: "#a78bfa" }),
-    h("pointLight", { position: [0, -4, 2],  intensity: 0.5, color: "#ff9a3c" }),
-    h(Stars, null),
-    h("group", { ref: groupRef },
-      h(OrbitPath, { radius: R_IN }),
-      h(OrbitPath, { radius: R_OUT }),
-      h(EdgeLines, null),
-      h(DataFlow, null),
-      h(HubNode, null),
-      ...PRODUCT_NODES.map((n) => h(ProductNode, { key: n.id, node: n }))
-    )
-  );
+function makeEdgeLabel(text, color) {
+  const W = 192, H = 32;
+  const cv = document.createElement("canvas");
+  cv.width = W; cv.height = H;
+  const ctx = cv.getContext("2d");
+  ctx.fillStyle = "#050505";
+  ctx.fillRect(0, 0, W, H);
+  ctx.strokeStyle = "#1f1f22";
+  ctx.lineWidth = 1;
+  ctx.strokeRect(0.5, 0.5, W - 1, H - 1);
+  ctx.font = "9px monospace";
+  ctx.fillStyle = color;
+  ctx.textAlign = "center";
+  ctx.fillText(text, W / 2, 21);
+  const tex = new THREE.CanvasTexture(cv);
+  tex.minFilter = THREE.LinearFilter;
+  const mat = new THREE.SpriteMaterial({ map: tex, transparent: true, opacity: 0, depthWrite: false });
+  const spr = new THREE.Sprite(mat);
+  spr.scale.set(1.2, 0.2, 1);
+  return spr;
 }
 
 export default function NodeGraphCanvas({ mouse }) {
-  const localMouse = useRef({ x: 0, y: 0 });
-  const m = mouse || localMouse;
-  return (
-    <Canvas
-      camera={{ position: [0, 2.5, 6.5], fov: 52 }}
-      gl={{ antialias: false, alpha: false, powerPreference: "high-performance" }}
-      dpr={[1, 1]}
-    >
-      <Suspense fallback={null}>
-        {h(Scene, { mouse: m })}
-      </Suspense>
-    </Canvas>
-  );
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const parent = canvas.parentElement;
+
+    const renderer = new THREE.WebGLRenderer({
+      canvas,
+      antialias: false,
+      alpha: true,
+      powerPreference: "high-performance",
+    });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+    renderer.setClearColor(0x000000, 0);
+
+    const scene = new THREE.Scene();
+
+    const buildOrtho = () => {
+      const w = parent.clientWidth || 1;
+      const h = parent.clientHeight || 1;
+      const a = w / h;
+      const cam = new THREE.OrthographicCamera(
+        -VIEW_H * a / 2, VIEW_H * a / 2,
+        VIEW_H / 2, -VIEW_H / 2,
+        0.1, 100
+      );
+      cam.position.z = 10;
+      return cam;
+    };
+    let camera = buildOrtho();
+
+    const onResize = () => {
+      const w = parent.clientWidth || 1;
+      const h = parent.clientHeight || 1;
+      renderer.setSize(w, h);
+      const a = w / h;
+      camera.left   = -VIEW_H * a / 2;
+      camera.right  =  VIEW_H * a / 2;
+      camera.top    =  VIEW_H / 2;
+      camera.bottom = -VIEW_H / 2;
+      camera.updateProjectionMatrix();
+    };
+    onResize();
+
+    const nodeMap = Object.fromEntries(NODES.map((n) => [n.id, n]));
+
+    // Stars
+    {
+      const count = 280;
+      const pos = new Float32Array(count * 3);
+      for (let i = 0; i < count; i++) {
+        pos[i * 3]     = (Math.random() - 0.5) * 24;
+        pos[i * 3 + 1] = (Math.random() - 0.5) * 10;
+        pos[i * 3 + 2] = -3;
+      }
+      const sg = new THREE.BufferGeometry();
+      sg.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+      scene.add(new THREE.Points(sg, new THREE.PointsMaterial({ color: 0x1e1e24, size: 0.04 })));
+    }
+
+    const nodeMeshes = [];
+    const nodeLabelSprites = [];
+
+    NODES.forEach((n, i) => {
+      // Glow halo
+      const glowGeo = new THREE.CircleGeometry(n.r * 3.2, 32);
+      const glowMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(n.color), transparent: true, opacity: 0 });
+      const glow = new THREE.Mesh(glowGeo, glowMat);
+      glow.position.set(n.x, n.y, -0.1);
+      glow.scale.set(0, 0, 1);
+      scene.add(glow);
+
+      // Filled circle
+      const geo = new THREE.CircleGeometry(n.r, 48);
+      const mat = new THREE.MeshBasicMaterial({ color: new THREE.Color(n.color) });
+      const mesh = new THREE.Mesh(geo, mat);
+      mesh.position.set(n.x, n.y, 0);
+      mesh.scale.set(0, 0, 1);
+      scene.add(mesh);
+
+      // Rotating outer ring for primary node (AEP)
+      let ring = null;
+      if (n.primary) {
+        const rGeo = new THREE.RingGeometry(n.r * 1.6, n.r * 1.76, 48);
+        const rMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(n.color), transparent: true, opacity: 0.35, side: THREE.DoubleSide });
+        ring = new THREE.Mesh(rGeo, rMat);
+        ring.position.set(n.x, n.y, 0.01);
+        ring.scale.set(0, 0, 1);
+        scene.add(ring);
+      }
+
+      const label = makeNodeLabel(n.label, n.sub, n.color);
+      label.position.set(n.x, n.y - n.r - 0.5, 0.05);
+      scene.add(label);
+      nodeLabelSprites.push(label);
+
+      nodeMeshes.push({ mesh, glow, ring, n });
+    });
+
+    const edgeGeos = [];
+    const edgeLabelSprites = [];
+    const particles = [];
+
+    EDGES.forEach(({ from, to, color, label }, ei) => {
+      const nf = nodeMap[from], nt = nodeMap[to];
+      const dx = nt.x - nf.x, dy = nt.y - nf.y;
+      const len = Math.sqrt(dx * dx + dy * dy);
+      const ux = dx / len, uy = dy / len;
+
+      const sx = nf.x + ux * (nf.r + 0.04);
+      const sy = nf.y + uy * (nf.r + 0.04);
+      const ex = nt.x - ux * (nt.r + 0.14);
+      const ey = nt.y - uy * (nt.r + 0.14);
+
+      // Edge line with draw-in via drawRange
+      const pts = Array.from({ length: EDGE_SEGS }, (_, j) => {
+        const t = j / (EDGE_SEGS - 1);
+        return new THREE.Vector3(sx + (ex - sx) * t, sy + (ey - sy) * t, -0.05);
+      });
+      const geo = new THREE.BufferGeometry().setFromPoints(pts);
+      geo.setDrawRange(0, 0);
+      const lineMat = new THREE.LineBasicMaterial({ color: new THREE.Color(color), transparent: true, opacity: 0.28 });
+      scene.add(new THREE.Line(geo, lineMat));
+      edgeGeos.push(geo);
+
+      // Arrowhead triangle at destination
+      const tip = new THREE.Vector2(nt.x - ux * (nt.r + 0.02), nt.y - uy * (nt.r + 0.02));
+      const base = new THREE.Vector2(tip.x - ux * 0.22, tip.y - uy * 0.22);
+      const perp = new THREE.Vector2(-uy, ux).multiplyScalar(0.085);
+      const aVerts = new Float32Array([
+        tip.x, tip.y, 0.01,
+        base.x + perp.x, base.y + perp.y, 0.01,
+        base.x - perp.x, base.y - perp.y, 0.01,
+      ]);
+      const aGeo = new THREE.BufferGeometry();
+      aGeo.setAttribute("position", new THREE.BufferAttribute(aVerts, 3));
+      const aMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(color), transparent: true, opacity: 0 });
+      scene.add(new THREE.Mesh(aGeo, aMat));
+
+      // Edge label at midpoint, offset perpendicularly
+      const midX = (sx + ex) / 2;
+      const midY = (sy + ey) / 2;
+      const eLabelSpr = makeEdgeLabel(label, color);
+      eLabelSpr.position.set(midX + (-uy) * 0.38, midY + ux * 0.38, 0.1);
+      scene.add(eLabelSpr);
+      edgeLabelSprites.push(eLabelSpr);
+
+      // 2 particles per edge, staggered
+      for (let p = 0; p < 2; p++) {
+        const pGeo = new THREE.BufferGeometry();
+        const pArr = new Float32Array([sx, sy, 0.15]);
+        pGeo.setAttribute("position", new THREE.BufferAttribute(pArr, 3));
+        const pMat = new THREE.PointsMaterial({ color: new THREE.Color(color), size: 0.1, sizeAttenuation: true, transparent: true, opacity: 0 });
+        const pts2 = new THREE.Points(pGeo, pMat);
+        scene.add(pts2);
+
+        const proxy = { t: 0 };
+        const updateParticle = () => {
+          const arr = pGeo.attributes.position.array;
+          arr[0] = sx + (ex - sx) * proxy.t;
+          arr[1] = sy + (ey - sy) * proxy.t;
+          pGeo.attributes.position.needsUpdate = true;
+        };
+
+        const tween = gsap.to(proxy, {
+          t: 1,
+          duration: 2.0 + Math.random() * 1.5,
+          ease: "none",
+          repeat: -1,
+          delay: p * 1.1 + ei * 0.15 + Math.random() * 0.4,
+          onUpdate: updateParticle,
+        });
+
+        particles.push({ pts: pts2, tween, pGeo, pMat });
+
+        // Reveal arrowhead after edge fully drawn
+        gsap.to(aMat, { opacity: 0.85, duration: 0.3, delay: 0.8 + 0.9 + ei * 0.1 + 1.0 });
+
+        // Reveal particles
+        gsap.to(pMat, { opacity: 1, duration: 0.4, delay: 0.8 + 2.0 + (ei * 2 + p) * 0.06 });
+      }
+    });
+
+    // Entrance — nodes
+    const D0 = 0.3;
+    NODES.forEach((n, i) => {
+      const { mesh, glow, ring } = nodeMeshes[i];
+      const d = D0 + i * 0.12;
+      gsap.to(mesh.scale, { x: 1, y: 1, duration: 0.6, ease: "back.out(2)", delay: d });
+      gsap.to(glow.scale, { x: 1, y: 1, duration: 0.8, ease: "back.out(1.5)", delay: d });
+      gsap.to(glow.material, { opacity: 0.08, duration: 0.8, delay: d });
+      if (ring) gsap.to(ring.scale, { x: 1, y: 1, duration: 0.6, ease: "back.out(2)", delay: d });
+      gsap.to(nodeLabelSprites[i].material, { opacity: 1, duration: 0.5, delay: d + 0.3 });
+    });
+
+    // Entrance — edges draw in
+    edgeGeos.forEach((geo, i) => {
+      const proxy = { v: 0 };
+      gsap.to(proxy, {
+        v: EDGE_SEGS,
+        duration: 0.9,
+        ease: "expo.out",
+        delay: D0 + 0.8 + i * 0.1,
+        onUpdate() { geo.setDrawRange(0, Math.round(proxy.v)); },
+      });
+    });
+
+    // Entrance — edge labels
+    edgeLabelSprites.forEach((spr, i) => {
+      gsap.to(spr.material, { opacity: 1, duration: 0.4, delay: D0 + 1.8 + i * 0.1 });
+    });
+
+    // Camera drift on mouse
+    const camXY = { x: 0, y: 0 };
+    let raf;
+    const clock = new THREE.Clock();
+
+    const tick = () => {
+      raf = requestAnimationFrame(tick);
+      const t = clock.getElapsedTime();
+
+      if (mouse?.current) {
+        camXY.x += (mouse.current.x * 0.8 - camXY.x) * 0.03;
+        camXY.y += (mouse.current.y * 0.35 - camXY.y) * 0.03;
+      }
+      camera.position.x = camXY.x;
+      camera.position.y = camXY.y;
+
+      // Pulse AEP glow + rotate ring
+      const aep = nodeMeshes[0];
+      if (aep) {
+        aep.glow.material.opacity = 0.06 + Math.sin(t * 1.3) * 0.04;
+        if (aep.ring) {
+          aep.ring.rotation.z = t * 0.28;
+          aep.ring.material.opacity = 0.22 + Math.sin(t * 0.95) * 0.1;
+        }
+      }
+
+      renderer.render(scene, camera);
+    };
+    tick();
+
+    const ro = new ResizeObserver(onResize);
+    ro.observe(parent);
+
+    return () => {
+      cancelAnimationFrame(raf);
+      ro.disconnect();
+      particles.forEach((p) => p.tween.kill());
+      renderer.dispose();
+      scene.clear();
+    };
+  }, []);
+
+  return <canvas ref={canvasRef} className="w-full h-full" />;
 }

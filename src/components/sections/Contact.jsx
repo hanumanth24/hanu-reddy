@@ -182,7 +182,7 @@ export default function Contact() {
               className="brutal-box p-6 flex items-center justify-between group hover:bg-[#E5FE40] hover:border-[#E5FE40] transition-colors mt-2 text-left w-full"
             >
               <div>
-                <div className="font-mono text-[10px] tracking-[0.3em] text-zinc-500 group-hover:text-[#050505]/70 mb-2">
+                <div className="font-mono text-[10px] tracking-[0.3em] text-zinc-500 group-hover:text-[#050505] mb-2">
                   SCHEDULING / CALENDLY
                 </div>
                 <div className="font-display uppercase font-semibold text-white text-2xl leading-tight group-hover:text-[#050505]">

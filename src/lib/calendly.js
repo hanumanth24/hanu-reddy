@@ -13,7 +13,7 @@ export function openCalendly(surface = "unknown") {
     window.Calendly.initPopupWidget({
       url,
       pageSettings: {
-        backgroundColor: "0a0a0a",
+        backgroundColor: "050505",
         primaryColor: "E5FE40",
         textColor: "ffffff",
         hideEventTypeDetails: false,

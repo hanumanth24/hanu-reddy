@@ -316,13 +316,13 @@ export default function Skills() {
               NODES: 08
             </span>
             <span data-status-item className="hidden sm:inline font-mono text-[7px] tracking-[0.25em] text-zinc-500" style={{ opacity: 0 }}>
-              EDGES: 13
+              EDGES: 08
             </span>
             <span data-status-item className="hidden md:inline font-mono text-[7px] tracking-[0.25em] text-zinc-500" style={{ opacity: 0 }}>
               BIDIRECTIONAL DATA FLOW
             </span>
             <span data-status-item className="ml-auto font-mono text-[7px] tracking-[0.25em] text-zinc-600" style={{ opacity: 0 }}>
-              AEC TOPOLOGY / 3D
+              AEC ARCHITECTURE
             </span>
           </div>
         </div>

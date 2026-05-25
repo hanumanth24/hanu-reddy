@@ -17,20 +17,16 @@ export default function Projects() {
     const track = trackRef.current;
     if (!section || !track) return;
 
-    // Desktop only — mobile uses native overflow-x scroll
-    if (window.innerWidth < 768) return;
-
     const ctx = gsap.context(() => {
-      const totalWidth = track.scrollWidth - window.innerWidth;
-      if (totalWidth <= 0) return;
+      const getTotal = () => track.scrollWidth - window.innerWidth;
 
       gsap.to(track, {
-        x: () => -totalWidth,
+        x: () => -getTotal(),
         ease: "none",
         scrollTrigger: {
           trigger: section,
           start: "top top",
-          end: () => `+=${totalWidth}`,
+          end: () => `+=${getTotal()}`,
           scrub: 1,
           pin: true,
           anticipatePin: 1,
@@ -47,52 +43,35 @@ export default function Projects() {
       id="projects"
       ref={sectionRef}
       data-testid="projects-section"
-      className="relative bg-[#050505] border-t border-zinc-900 overflow-hidden md:overflow-visible"
+      className="relative bg-[#050505] border-t border-zinc-900 overflow-visible"
     >
-      {/* Header */}
-      <div className="md:absolute md:top-0 md:left-0 md:right-0 z-20 pointer-events-none px-6 md:px-12 pt-14 md:pt-10 pb-6 md:pb-0">
+      {/* Header — always absolute over the pinned section */}
+      <div className="absolute top-0 left-0 right-0 z-20 pointer-events-none px-6 md:px-12 pt-10 pb-0">
         <div className="flex items-center gap-4 mb-4">
           <span className="section-label">[ 02 / SELECTED WORK ]</span>
           <span className="flex-1 h-px bg-zinc-800" />
-          <span className="hidden sm:inline font-mono text-[11px] tracking-[0.3em] text-zinc-500">
+          <span className="font-mono text-[11px] tracking-[0.3em] text-zinc-500">
             {PROJECTS.length.toString().padStart(2, "0")} CASE STUDIES
           </span>
         </div>
         <h2
           className="font-display uppercase font-semibold text-white leading-[0.9]"
-          style={{ fontSize: "clamp(2rem, 6vw, 5.5rem)" }}
+          style={{ fontSize: "clamp(1.8rem, 6vw, 5.5rem)" }}
         >
           Featured <span className="text-[#E5FE40]">Case Studies</span>
         </h2>
       </div>
 
-      {/* ── Mobile: native horizontal swipe ── */}
-      <div className="md:hidden overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-10 pt-4 px-6"
-        style={{ WebkitOverflowScrolling: "touch" }}
-      >
-        <div className="flex gap-5 w-max">
+      {/* GSAP horizontal track — same on all screen sizes */}
+      <div className="h-screen flex items-center">
+        <div
+          ref={trackRef}
+          className="flex flex-row gap-5 md:gap-8 pl-6 md:pl-12 pr-[15vw] pt-40 pb-8 will-change-transform"
+        >
           {PROJECTS.map((p, i) => (
             <ProjectCard key={p.id} p={p} i={i} />
           ))}
-          {/* Trailing spacer so last card isn't flush */}
-          <div className="w-6 flex-shrink-0" />
-        </div>
-        {/* Swipe hint */}
-        <p className="font-mono text-[9px] tracking-[0.3em] text-zinc-600 mt-4 text-center">
-          SWIPE TO EXPLORE →
-        </p>
-      </div>
-
-      {/* ── Desktop: GSAP horizontal pin scroll ── */}
-      <div className="hidden md:block md:h-screen md:flex md:items-center">
-        <div
-          ref={trackRef}
-          className="flex flex-row gap-8 pl-12 pr-[10vw] pt-44 pb-8 will-change-transform"
-        >
-          {PROJECTS.map((p, i) => (
-            <ProjectCard key={p.id} p={p} i={i} desktop />
-          ))}
-          <div className="flex w-[40vw] flex-shrink-0 items-center justify-center text-zinc-700 font-mono text-xs tracking-[0.3em]">
+          <div className="flex w-[30vw] flex-shrink-0 items-center justify-center text-zinc-700 font-mono text-xs tracking-[0.3em]">
             END OF REEL ↗
           </div>
         </div>
@@ -101,18 +80,14 @@ export default function Projects() {
   );
 }
 
-function ProjectCard({ p, i, desktop = false }) {
+function ProjectCard({ p, i }) {
   return (
     <Link
       to={`/work/${p.slug}`}
       onClick={() => events.projectClick?.(p.id)}
       data-testid={`project-card-${p.id}`}
       data-cursor="hover"
-      className={`brutal-box group relative overflow-hidden transition-colors duration-300 hover:border-[#E5FE40] block flex-shrink-0 ${
-        desktop
-          ? "w-[460px] lg:w-[560px]"
-          : "w-[82vw] max-w-[380px]"
-      }`}
+      className="brutal-box group relative overflow-hidden transition-colors duration-300 hover:border-[#E5FE40] block flex-shrink-0 w-[80vw] max-w-[360px] sm:max-w-[420px] md:w-[460px] lg:w-[560px]"
     >
       <div className="relative aspect-[16/10] overflow-hidden">
         <img
@@ -136,7 +111,7 @@ function ProjectCard({ p, i, desktop = false }) {
       <div className="p-5 md:p-8">
         <h3
           className="font-display uppercase font-semibold text-white group-hover:text-[#E5FE40] transition-colors leading-[0.95] mb-3"
-          style={{ fontSize: "clamp(1.2rem, 2.2vw, 2.2rem)" }}
+          style={{ fontSize: "clamp(1.1rem, 2.2vw, 2.2rem)" }}
         >
           {p.title}
         </h3>
