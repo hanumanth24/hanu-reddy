@@ -4,7 +4,12 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { STATS } from "@/lib/data";
 import DataWaveCanvas from "@/components/three/DataWaveCanvas";
+import LazyMount from "@/components/LazyMount";
 import useTitleReveal from "@/hooks/useTitleReveal";
+
+const isMobile =
+  typeof window !== "undefined" &&
+  window.matchMedia("(pointer: coarse)").matches;
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -103,10 +108,12 @@ export default function Stats() {
       className="relative border-t border-zinc-900 overflow-hidden"
       style={{ minHeight: "640px" }}
     >
-      {/* Three.js wave behind everything */}
-      <div className="absolute inset-0 z-0">
-        <DataWaveCanvas />
-      </div>
+      {/* Three.js wave — lazy mounted, disabled on mobile */}
+      {!isMobile && (
+        <LazyMount className="absolute inset-0 z-0">
+          <DataWaveCanvas />
+        </LazyMount>
+      )}
 
       {/* Dark overlay so text stays readable */}
       <div className="absolute inset-0 z-[1] pointer-events-none"

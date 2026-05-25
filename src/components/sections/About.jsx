@@ -5,6 +5,11 @@ import { PROFILE, CERTIFICATIONS } from "@/lib/data";
 import { ShieldCheck, BadgeCheck } from "lucide-react";
 import { useInView } from "motion/react";
 import ProfilePicCanvas from "@/components/three/ProfilePicCanvas";
+import LazyMount from "@/components/LazyMount";
+
+const isMobile =
+  typeof window !== "undefined" &&
+  window.matchMedia("(pointer: coarse)").matches;
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -323,9 +328,17 @@ export default function About() {
                 className="relative border border-zinc-800 overflow-hidden"
                 style={{ aspectRatio: "4/5", clipPath: "inset(0 0 100% 0)" }}
               >
-                <div className="absolute inset-0">
-                  <ProfilePicCanvas mouse={mouse} />
-                </div>
+                {isMobile ? (
+                  <img
+                    src="/hanu.png"
+                    alt="Hanumanth Reddy Barla"
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+                ) : (
+                  <LazyMount className="absolute inset-0">
+                    <ProfilePicCanvas mouse={mouse} />
+                  </LazyMount>
+                )}
 
                 {/* Name overlay */}
                 <div

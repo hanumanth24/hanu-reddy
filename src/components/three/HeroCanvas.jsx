@@ -2,10 +2,10 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { MeshDistortMaterial, Points, PointMaterial } from "@react-three/drei";
 import { useRef, useMemo, Suspense, createElement as h } from "react";
 
-// IMPORTANT: We use React.createElement (h) instead of JSX inside the R3F tree
-// to avoid the visual-edits babel plugin injecting `x-file-name`, `x-line-number`
-// etc. attributes on three.js native objects (mesh/group/material) which R3F
-// cannot set and throws on.
+// Detect touch/mobile — disable heavy canvas on low-power devices
+const isMobile =
+  typeof window !== "undefined" &&
+  window.matchMedia("(pointer: coarse)").matches;
 
 function DistortedBlob({ mouse }) {
   const ref = useRef();
@@ -22,18 +22,18 @@ function DistortedBlob({ mouse }) {
   return h(
     "mesh",
     { ref, scale: 1.6 },
-    h("icosahedronGeometry", { args: [1, 64] }),
+    h("icosahedronGeometry", { args: [1, 4] }),
     h(MeshDistortMaterial, {
       color: "#E5FE40",
       distort: 0.45,
-      speed: 1.6,
+      speed: 1.4,
       roughness: 0.15,
       metalness: 0.65,
     })
   );
 }
 
-function CosmicDust({ count = 1800 }) {
+function CosmicDust({ count = 800 }) {
   const ref = useRef();
   const positions = useMemo(() => {
     const arr = new Float32Array(count * 3);
@@ -41,27 +41,29 @@ function CosmicDust({ count = 1800 }) {
       const r = 4 + Math.random() * 4;
       const theta = Math.random() * Math.PI * 2;
       const phi = Math.acos(2 * Math.random() - 1);
-      arr[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+      arr[i * 3]     = r * Math.sin(phi) * Math.cos(theta);
       arr[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
       arr[i * 3 + 2] = r * Math.cos(phi);
     }
     return arr;
   }, [count]);
+
   useFrame((state) => {
     if (!ref.current) return;
     ref.current.rotation.y = state.clock.getElapsedTime() * 0.04;
     ref.current.rotation.x = state.clock.getElapsedTime() * 0.02;
   });
+
   return h(
     Points,
     { ref, positions, stride: 3, frustumCulled: false },
     h(PointMaterial, {
       transparent: true,
       color: "#ffffff",
-      size: 0.015,
+      size: 0.018,
       sizeAttenuation: true,
       depthWrite: false,
-      opacity: 0.7,
+      opacity: 0.6,
     })
   );
 }
@@ -92,7 +94,7 @@ function FloatingGeo({ mouse }) {
     h(
       "mesh",
       { ref: torusRef, position: [2.4, 1.4, -1] },
-      h("torusGeometry", { args: [0.4, 0.12, 24, 80] }),
+      h("torusGeometry", { args: [0.4, 0.12, 12, 48] }),
       h("meshStandardMaterial", {
         color: "#ffffff",
         roughness: 0.1,
@@ -123,32 +125,35 @@ function Scene({ mouse }) {
     null,
     h("color", { attach: "background", args: ["#050505"] }),
     h("ambientLight", { intensity: 0.4 }),
-    h("directionalLight", {
-      position: [5, 5, 5],
-      intensity: 0.8,
-      color: "#ffffff",
-    }),
-    h("pointLight", {
-      position: [-4, -3, -4],
-      intensity: 1.2,
-      color: "#E5FE40",
-    }),
-    h(CosmicDust, { count: 1800 }),
+    h("directionalLight", { position: [5, 5, 5], intensity: 0.8, color: "#ffffff" }),
+    h("pointLight", { position: [-4, -3, -4], intensity: 1.2, color: "#E5FE40" }),
+    h(CosmicDust, { count: 800 }),
     h(DistortedBlob, { mouse }),
     h(FloatingGeo, { mouse })
   );
 }
 
+// Mobile fallback: CSS-only gradient (no WebGL context)
+function MobileHero() {
+  return (
+    <div
+      className="absolute inset-0"
+      style={{
+        background:
+          "radial-gradient(ellipse at 60% 40%, rgba(229,254,64,0.12) 0%, transparent 65%), #050505",
+      }}
+    />
+  );
+}
+
 export default function HeroCanvas({ mouse }) {
+  if (isMobile) return <MobileHero />;
+
   return (
     <Canvas
       dpr={[1, 1.5]}
       camera={{ position: [0, 0, 5], fov: 50 }}
-      gl={{
-        antialias: true,
-        alpha: false,
-        powerPreference: "high-performance",
-      }}
+      gl={{ antialias: true, alpha: false, powerPreference: "high-performance" }}
     >
       <Suspense fallback={null}>{h(Scene, { mouse })}</Suspense>
     </Canvas>

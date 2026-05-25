@@ -2,8 +2,9 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { useRef, useMemo, Suspense, createElement as h } from "react";
 import * as THREE from "three";
 
-const COLS = 48;
-const ROWS = 22;
+// Reduced grid: 28×12 = 336 JS-updated points (was 48×22 = 1056)
+const COLS = 28;
+const ROWS = 12;
 const COUNT = COLS * ROWS;
 
 function WaveGrid() {
@@ -48,7 +49,7 @@ function WaveGrid() {
     { ref: meshRef, geometry: geo, frustumCulled: false },
     h("pointsMaterial", {
       color: "#E5FE40",
-      size: 0.045,
+      size: 0.055,
       transparent: true,
       opacity: 0.5,
       sizeAttenuation: true,
@@ -57,12 +58,14 @@ function WaveGrid() {
   );
 }
 
+// Reduced horizon lines: 4 (was 8), fewer vertices per line
 function HorizonLines() {
+  const LINE_COUNT = 4;
   const lineGeos = useMemo(() => {
-    return Array.from({ length: 8 }, (_, i) => {
-      const z = (i / 7 - 0.5) * 6;
+    return Array.from({ length: LINE_COUNT }, (_, i) => {
+      const z = (i / (LINE_COUNT - 1) - 0.5) * 6;
       const pts = [];
-      for (let x = -7; x <= 7; x += 0.15) pts.push(x, 0, z);
+      for (let x = -7; x <= 7; x += 0.28) pts.push(x, 0, z);
       const arr = new Float32Array(pts);
       const g = new THREE.BufferGeometry();
       g.setAttribute("position", new THREE.BufferAttribute(arr, 3));
@@ -77,7 +80,7 @@ function HorizonLines() {
       if (!r) return;
       const pos = r.geometry?.attributes?.position;
       if (!pos) return;
-      const z = (i / 7 - 0.5) * 6;
+      const z = (i / (LINE_COUNT - 1) - 0.5) * 6;
       for (let j = 0; j < pos.count; j++) {
         const x = pos.array[j * 3];
         pos.array[j * 3 + 1] =
@@ -98,11 +101,7 @@ function HorizonLines() {
         ref: (el) => { refs.current[i] = el; },
         geometry: geo,
       },
-        h("lineBasicMaterial", {
-          color: "#E5FE40",
-          transparent: true,
-          opacity: 0.12,
-        })
+        h("lineBasicMaterial", { color: "#E5FE40", transparent: true, opacity: 0.14 })
       )
     )
   );
@@ -112,7 +111,8 @@ function Scene() {
   const groupRef = useRef();
   useFrame((state) => {
     if (groupRef.current) {
-      groupRef.current.rotation.x = -0.52 + Math.sin(state.clock.getElapsedTime() * 0.15) * 0.04;
+      groupRef.current.rotation.x =
+        -0.52 + Math.sin(state.clock.getElapsedTime() * 0.15) * 0.04;
     }
   });
   return h(
@@ -129,8 +129,8 @@ export default function DataWaveCanvas() {
   return (
     <Canvas
       camera={{ position: [0, 3.5, 7], fov: 55 }}
-      gl={{ antialias: true, alpha: false }}
-      dpr={[1, 1.2]}
+      gl={{ antialias: false, alpha: false, powerPreference: "high-performance" }}
+      dpr={[1, 1]}
     >
       <Suspense fallback={null}>
         {h(Scene, null)}

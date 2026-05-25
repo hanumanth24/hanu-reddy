@@ -81,10 +81,10 @@ function DataFlow() {
       const na = nodeById[a];
       const nb = nodeById[b];
       const color = na.color;
-      // 3 particles per edge, evenly spaced in phase, bidirectional
-      for (let i = 0; i < 3; i++) {
-        list.push({ from: na.pos, to: nb.pos, speed: 0.28 + Math.random() * 0.14, phase: i / 3, color });
-        list.push({ from: nb.pos, to: na.pos, speed: 0.22 + Math.random() * 0.12, phase: i / 3 + 0.5, color: nb.color });
+      // 2 particles per edge (was 3), bidirectional
+      for (let i = 0; i < 2; i++) {
+        list.push({ from: na.pos, to: nb.pos, speed: 0.28 + Math.random() * 0.14, phase: i / 2, color });
+        list.push({ from: nb.pos, to: na.pos, speed: 0.22 + Math.random() * 0.12, phase: i / 2 + 0.5, color: nb.color });
       }
     });
     return list;
@@ -187,8 +187,8 @@ function OrbitPath({ radius, yOff = 0 }) {
 function Stars() {
   const ref = useRef();
   const geo = useMemo(() => {
-    const arr = new Float32Array(1200 * 3);
-    for (let i = 0; i < 1200; i++) {
+    const arr = new Float32Array(500 * 3);
+    for (let i = 0; i < 500; i++) {
       arr[i * 3]     = (Math.random() - 0.5) * 18;
       arr[i * 3 + 1] = (Math.random() - 0.5) * 18;
       arr[i * 3 + 2] = (Math.random() - 0.5) * 12 - 3;
@@ -243,8 +243,8 @@ export default function NodeGraphCanvas({ mouse }) {
   return (
     <Canvas
       camera={{ position: [0, 2.5, 6.5], fov: 52 }}
-      gl={{ antialias: true, alpha: false }}
-      dpr={[1, 1.5]}
+      gl={{ antialias: false, alpha: false, powerPreference: "high-performance" }}
+      dpr={[1, 1]}
     >
       <Suspense fallback={null}>
         {h(Scene, { mouse: m })}
