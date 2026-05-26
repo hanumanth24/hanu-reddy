@@ -25,8 +25,10 @@ const EDGES = [
   { from: "ajo",       to: "analytics", color: "#ff9a3c", label: "OUTCOMES" },
 ];
 
-const VIEW_H = 7.5;
 const EDGE_SEGS = 40;
+// Node bounding box + padding — used to fit camera for any aspect ratio
+const CONTENT_W = 13.0; // x range -5.6..5.4 + 1.0 each side
+const CONTENT_H = 6.0;  // y range -2.3..2.0 + ~0.85 each side
 
 function makeNodeLabel(text, sub, color) {
   const W = 280, H = 68;
@@ -88,13 +90,17 @@ export default function NodeGraphCanvas({ mouse }) {
 
     const scene = new THREE.Scene();
 
+    // Fit frustum to node bounding box — works at any aspect ratio (mobile/desktop)
+    const getFrustumH = (w, h) => Math.max(CONTENT_H, CONTENT_W / (w / h)) * 1.06;
+
     const buildOrtho = () => {
       const w = parent.clientWidth || 1;
       const h = parent.clientHeight || 1;
       const a = w / h;
+      const vh = getFrustumH(w, h);
       const cam = new THREE.OrthographicCamera(
-        -VIEW_H * a / 2, VIEW_H * a / 2,
-        VIEW_H / 2, -VIEW_H / 2,
+        -vh * a / 2, vh * a / 2,
+        vh / 2, -vh / 2,
         0.1, 100
       );
       cam.position.z = 10;
@@ -107,10 +113,11 @@ export default function NodeGraphCanvas({ mouse }) {
       const h = parent.clientHeight || 1;
       renderer.setSize(w, h);
       const a = w / h;
-      camera.left   = -VIEW_H * a / 2;
-      camera.right  =  VIEW_H * a / 2;
-      camera.top    =  VIEW_H / 2;
-      camera.bottom = -VIEW_H / 2;
+      const vh = getFrustumH(w, h);
+      camera.left   = -vh * a / 2;
+      camera.right  =  vh * a / 2;
+      camera.top    =  vh / 2;
+      camera.bottom = -vh / 2;
       camera.updateProjectionMatrix();
     };
     onResize();

@@ -6,10 +6,6 @@ import NodeGraphCanvas from "@/components/three/NodeGraphCanvas";
 import LazyMount from "@/components/LazyMount";
 import useTitleReveal from "@/hooks/useTitleReveal";
 
-const isMobile =
-  typeof window !== "undefined" &&
-  window.matchMedia("(pointer: coarse)").matches;
-
 gsap.registerPlugin(ScrollTrigger);
 
 // Adobe product nodes — colors mirror the 3D graph exactly
@@ -239,17 +235,9 @@ export default function Skills() {
           className="relative border border-zinc-800 overflow-hidden h-[300px] md:h-[420px] lg:h-[520px]"
           style={{ opacity: 0 }}
         >
-          {isMobile ? (
-            <div className="absolute inset-0 flex items-center justify-center">
-              <span className="font-mono text-[10px] tracking-[0.3em] text-zinc-600">
-                ADOBE EXPERIENCE CLOUD TOPOLOGY
-              </span>
-            </div>
-          ) : (
-            <LazyMount className="absolute inset-0">
-              <NodeGraphCanvas mouse={mouse} />
-            </LazyMount>
-          )}
+          <LazyMount className="absolute inset-0">
+            <NodeGraphCanvas mouse={mouse} />
+          </LazyMount>
 
           {/* Corner frame accents */}
           <div className="absolute top-0 left-0 w-5 h-5 border-t-2 border-l-2 border-[#E5FE40]/60 pointer-events-none" />
