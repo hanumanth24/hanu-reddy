@@ -5,6 +5,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Download, ArrowLeft, ArrowUpRight, Award } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import Cursor from "@/components/Cursor";
+import ScrollProgressBar from "@/components/ScrollProgressBar";
 import Footer from "@/components/sections/Footer";
 import LazyMount from "@/components/LazyMount";
 import ResumeCanvas from "@/components/three/ResumeCanvas";
@@ -102,6 +103,7 @@ export default function ResumePage() {
 
   return (
     <>
+      <ScrollProgressBar />
       <Cursor />
       <Navigation />
       <main>

@@ -5,6 +5,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import Cursor from "@/components/Cursor";
+import ScrollProgressBar from "@/components/ScrollProgressBar";
 import Footer from "@/components/sections/Footer";
 import LazyMount from "@/components/LazyMount";
 import SkillNetCanvas from "@/components/three/SkillNetCanvas";
@@ -128,6 +129,7 @@ export default function SkillsPage() {
 
   return (
     <>
+      <ScrollProgressBar />
       <Cursor />
       <Navigation />
       <main>

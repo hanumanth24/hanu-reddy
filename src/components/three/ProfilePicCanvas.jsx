@@ -1,7 +1,7 @@
-import { Canvas, useFrame, useLoader } from "@react-three/fiber";
+import { Canvas, useFrame, useLoader, useThree } from "@react-three/fiber";
 import { MeshDistortMaterial } from "@react-three/drei";
 import { TextureLoader } from "three";
-import { useRef, Suspense, createElement as h, useMemo } from "react";
+import { useRef, Suspense, createElement as h, useMemo, useEffect } from "react";
 import * as THREE from "three";
 
 function ProfileMesh({ mouse }) {
@@ -143,14 +143,38 @@ function Scene({ mouse }) {
   );
 }
 
+function PauseController() {
+  const { gl, invalidate } = useThree();
+  useEffect(() => {
+    const canvas = gl.domElement;
+    let rafId, running = false;
+    const tick = () => {
+      if (!running) return;
+      invalidate();
+      rafId = requestAnimationFrame(tick);
+    };
+    const io = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting && !running) { running = true; tick(); }
+      else if (!e.isIntersecting) { running = false; cancelAnimationFrame(rafId); }
+    }, { rootMargin: "100px" });
+    io.observe(canvas);
+    running = true;
+    tick();
+    return () => { running = false; cancelAnimationFrame(rafId); io.disconnect(); };
+  }, [gl, invalidate]);
+  return null;
+}
+
 export default function ProfilePicCanvas({ mouse }) {
   return (
     <Canvas
+      frameloop="demand"
       camera={{ position: [0, 0, 3.5], fov: 42 }}
       gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
       dpr={[1, 1.5]}
     >
       <Suspense fallback={null}>
+        {h(PauseController, null)}
         {h(Scene, { mouse })}
       </Suspense>
     </Canvas>

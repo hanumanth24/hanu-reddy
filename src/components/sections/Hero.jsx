@@ -192,7 +192,14 @@ export default function Hero() {
             style={{ fontSize: "clamp(2rem, 9vw, 9rem)" }}
           >
             <div>{splitText("HANUMANTH")}</div>
-            <div className="text-[#E5FE40]">{splitText("REDDY BARLA")}</div>
+            <div className="text-[#E5FE40]">
+              {splitText("REDDY BARLA")}
+              <span
+                className="cursor-blink inline-block align-bottom bg-[#E5FE40] ml-[0.08em]"
+                style={{ width: "0.055em", height: "0.82em" }}
+                aria-hidden="true"
+              />
+            </div>
           </h1>
 
           <motion.div

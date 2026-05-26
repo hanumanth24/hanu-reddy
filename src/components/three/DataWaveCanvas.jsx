@@ -1,5 +1,5 @@
-import { Canvas, useFrame } from "@react-three/fiber";
-import { useRef, useMemo, Suspense, createElement as h } from "react";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { useRef, useMemo, Suspense, createElement as h, useEffect } from "react";
 import * as THREE from "three";
 
 // Reduced grid: 28×12 = 336 JS-updated points (was 48×22 = 1056)
@@ -111,6 +111,28 @@ function HorizonLines() {
   );
 }
 
+function PauseController() {
+  const { gl, invalidate } = useThree();
+  useEffect(() => {
+    const canvas = gl.domElement;
+    let rafId, running = false;
+    const tick = () => {
+      if (!running) return;
+      invalidate();
+      rafId = requestAnimationFrame(tick);
+    };
+    const io = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting && !running) { running = true; tick(); }
+      else if (!e.isIntersecting) { running = false; cancelAnimationFrame(rafId); }
+    }, { rootMargin: "100px" });
+    io.observe(canvas);
+    running = true;
+    tick();
+    return () => { running = false; cancelAnimationFrame(rafId); io.disconnect(); };
+  }, [gl, invalidate]);
+  return null;
+}
+
 function Scene() {
   const groupRef = useRef();
   useFrame((state) => {
@@ -132,11 +154,13 @@ function Scene() {
 export default function DataWaveCanvas() {
   return (
     <Canvas
+      frameloop="demand"
       camera={{ position: [0, 3.5, 7], fov: 55 }}
       gl={{ antialias: false, alpha: false, powerPreference: "high-performance" }}
       dpr={[1, 1]}
     >
       <Suspense fallback={null}>
+        {h(PauseController, null)}
         {h(Scene, null)}
       </Suspense>
     </Canvas>

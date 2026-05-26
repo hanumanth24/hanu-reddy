@@ -232,7 +232,7 @@ export default function Skills() {
         {/* ── Adobe Topology Canvas ── */}
         <div
           ref={graphRef}
-          className="relative border border-zinc-800 overflow-hidden h-[300px] md:h-[420px] lg:h-[520px]"
+          className="relative border border-zinc-800 overflow-hidden h-[380px] md:h-[420px] lg:h-[520px]"
           style={{ opacity: 0 }}
         >
           <LazyMount className="absolute inset-0">
@@ -295,6 +295,18 @@ export default function Skills() {
               AEC ARCHITECTURE
             </span>
           </div>
+        </div>
+
+        {/* Mobile-only legend strip — horizontal scroll below canvas */}
+        <div className="flex md:hidden overflow-x-auto scrollbar-hide border border-t-0 border-zinc-800 bg-[#050505]/90 px-4 py-2.5 gap-5 mb-0">
+          {ADOBE_PRODUCTS.map((p) => (
+            <div key={p.id} className="flex items-center gap-1.5 shrink-0">
+              <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: p.color }} />
+              <span className="font-mono text-[8px] tracking-[0.18em] whitespace-nowrap" style={{ color: p.color }}>
+                {p.name}
+              </span>
+            </div>
+          ))}
         </div>
 
         {/* ── Adobe Product Feature Cards ── */}

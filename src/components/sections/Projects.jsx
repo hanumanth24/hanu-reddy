@@ -89,6 +89,14 @@ function ProjectCard({ p, i }) {
       data-cursor="hover"
       className="brutal-box group relative overflow-hidden transition-colors duration-300 hover:border-[#E5FE40] block flex-shrink-0 w-[80vw] max-w-[360px] sm:max-w-[420px] md:w-[460px] lg:w-[560px]"
     >
+      {/* Large background index number */}
+      <div
+        aria-hidden="true"
+        className="absolute bottom-0 right-0 font-display font-bold leading-none text-white/[0.035] pointer-events-none select-none pr-3 pb-1 transition-opacity duration-500 group-hover:opacity-60"
+        style={{ fontSize: "clamp(5rem, 14vw, 9rem)" }}
+      >
+        {String(i + 1).padStart(2, "0")}
+      </div>
       <div className="relative aspect-[16/10] overflow-hidden">
         <img
           src={p.image}

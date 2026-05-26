@@ -6,6 +6,7 @@ import { useInView } from "motion/react";
 import { Download, ArrowUpRight, ArrowLeft } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import Cursor from "@/components/Cursor";
+import ScrollProgressBar from "@/components/ScrollProgressBar";
 import Footer from "@/components/sections/Footer";
 import LazyMount from "@/components/LazyMount";
 import AchievementCanvas from "@/components/three/AchievementCanvas";
@@ -159,6 +160,7 @@ export default function AchievementsPage() {
 
   return (
     <>
+      <ScrollProgressBar />
       <Cursor />
       <Navigation />
       <main>
