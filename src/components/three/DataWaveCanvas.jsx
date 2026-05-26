@@ -9,6 +9,7 @@ const COUNT = COLS * ROWS;
 
 function WaveGrid() {
   const meshRef = useRef();
+  const frameRef = useRef(0);
   const geo = useMemo(() => {
     const positions = new Float32Array(COUNT * 3);
     let idx = 0;
@@ -25,6 +26,7 @@ function WaveGrid() {
   }, []);
 
   useFrame((state) => {
+    if (++frameRef.current % 2 !== 0) return;
     const t = state.clock.getElapsedTime();
     const pos = meshRef.current?.geometry?.attributes?.position;
     if (!pos) return;
@@ -74,7 +76,9 @@ function HorizonLines() {
   }, []);
 
   const refs = useRef([]);
+  const frameRef = useRef(0);
   useFrame((state) => {
+    if (++frameRef.current % 2 !== 0) return;
     const t = state.clock.getElapsedTime();
     refs.current.forEach((r, i) => {
       if (!r) return;

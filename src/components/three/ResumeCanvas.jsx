@@ -92,7 +92,9 @@ export default function ResumeCanvas() {
     gsap.to(pMat, { opacity: 0.7, duration: 1.5, delay: 0.5 });
 
     let raf;
+    let running = false;
     const tick = () => {
+      if (!running) return;
       raf = requestAnimationFrame(tick);
       const t = performance.now() * 0.001;
 
@@ -120,13 +122,22 @@ export default function ResumeCanvas() {
 
       renderer.render(scene, camera);
     };
+
+    const io = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting && !running) { running = true; tick(); }
+      else if (!e.isIntersecting) { running = false; cancelAnimationFrame(raf); }
+    }, { rootMargin: "100px" });
+    io.observe(canvas);
+    running = true;
     tick();
 
     const ro = new ResizeObserver(onResize);
     ro.observe(parent);
 
     return () => {
+      running = false;
       cancelAnimationFrame(raf);
+      io.disconnect();
       ro.disconnect();
       renderer.dispose();
       scene.clear();

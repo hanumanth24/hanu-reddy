@@ -286,9 +286,11 @@ export default function NodeGraphCanvas({ mouse }) {
     // Camera drift on mouse
     const camXY = { x: 0, y: 0 };
     let raf;
+    let running = false;
     const clock = new THREE.Clock();
 
     const tick = () => {
+      if (!running) return;
       raf = requestAnimationFrame(tick);
       const t = clock.getElapsedTime();
 
@@ -311,13 +313,22 @@ export default function NodeGraphCanvas({ mouse }) {
 
       renderer.render(scene, camera);
     };
+
+    const io = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting && !running) { running = true; tick(); }
+      else if (!e.isIntersecting) { running = false; cancelAnimationFrame(raf); }
+    }, { rootMargin: "100px" });
+    io.observe(canvas);
+    running = true;
     tick();
 
     const ro = new ResizeObserver(onResize);
     ro.observe(parent);
 
     return () => {
+      running = false;
       cancelAnimationFrame(raf);
+      io.disconnect();
       ro.disconnect();
       particles.forEach((p) => p.tween.kill());
       renderer.dispose();
