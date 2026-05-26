@@ -1,9 +1,9 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useInView } from "motion/react";
-import { Download, ArrowUpRight, ArrowLeft } from "lucide-react";
+import { Download, ArrowUpRight, ArrowLeft, Plus, Minus } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import Cursor from "@/components/Cursor";
 import ScrollProgressBar from "@/components/ScrollProgressBar";
@@ -49,105 +49,136 @@ function Counter({ value, suffix, label, delay = 0 }) {
   );
 }
 
-// ── Milestone card — fully redesigned ────────────────────────────────────────
-function MilestoneCard({ item, index }) {
-  const ref = useRef(null);
+// ── Accordion milestone row ───────────────────────────────────────────────────
+function MilestoneRow({ item, index, isOpen, onClick }) {
+  const detailRef = useRef(null);
+  const rowRef = useRef(null);
 
+  // Scroll-in animation (once)
   useEffect(() => {
-    const el = ref.current;
+    const el = rowRef.current;
     if (!el) return;
     const ctx = gsap.context(() => {
       gsap.fromTo(el,
-        { opacity: 0, y: 32 },
+        { opacity: 0, x: -24 },
         {
-          opacity: 1, y: 0, duration: 0.7, ease: "expo.out",
-          delay: (index % 4) * 0.09,
-          scrollTrigger: { trigger: el, start: "top 88%", once: true },
+          opacity: 1, x: 0, duration: 0.65, ease: "expo.out",
+          delay: index * 0.055,
+          scrollTrigger: { trigger: el, start: "top 90%", once: true },
         }
       );
     }, el);
     return () => ctx.revert();
   }, [index]);
 
+  // Expand / collapse detail panel
+  useEffect(() => {
+    const el = detailRef.current;
+    if (!el) return;
+    if (isOpen) {
+      gsap.set(el, { height: "auto", opacity: 1 });
+      const h = el.offsetHeight;
+      gsap.fromTo(el,
+        { height: 0, opacity: 0 },
+        { height: h, opacity: 1, duration: 0.42, ease: "expo.out" }
+      );
+    } else {
+      gsap.to(el, { height: 0, opacity: 0, duration: 0.28, ease: "expo.in" });
+    }
+  }, [isOpen]);
+
   return (
-    <div
-      ref={ref}
-      className="relative overflow-hidden flex flex-col bg-[#080808] group cursor-default"
-      style={{ opacity: 0 }}
-    >
-      {/* Top accent bar — solid card color */}
-      <div className="h-[3px] w-full shrink-0" style={{ backgroundColor: item.color }} />
-
-      {/* Subtle radial glow from card color */}
-      <div
-        className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+    <div ref={rowRef} style={{ opacity: 0 }}>
+      {/* ── Trigger row ── */}
+      <button
+        type="button"
+        onClick={onClick}
+        data-cursor="hover"
+        className="w-full flex items-center gap-4 md:gap-8 px-5 md:px-8 py-5 md:py-6 text-left border-b border-zinc-800/60 group transition-colors duration-200"
         style={{
-          background: `radial-gradient(ellipse at 0% 0%, ${item.color}12 0%, transparent 65%)`,
+          background: isOpen ? `${item.color}08` : "transparent",
+          borderLeft: `3px solid ${isOpen ? item.color : "transparent"}`,
+          transition: "background 0.25s, border-color 0.25s",
         }}
-      />
-
-      {/* Huge background year — decorative */}
-      <div
-        className="absolute right-3 bottom-2 font-display font-bold leading-none pointer-events-none select-none"
-        style={{ fontSize: "clamp(4rem, 8vw, 7rem)", color: item.color, opacity: 0.055 }}
-        aria-hidden="true"
+        aria-expanded={isOpen}
       >
-        {item.year}
-      </div>
+        {/* Index */}
+        <span className="font-mono text-[9px] tracking-[0.2em] text-zinc-700 w-5 shrink-0 tabular-nums">
+          {String(index + 1).padStart(2, "0")}
+        </span>
 
-      {/* Card content */}
-      <div className="relative z-10 flex flex-col gap-5 p-6 md:p-7 flex-1">
-
-        {/* Tag (filled) + index */}
-        <div className="flex items-start justify-between gap-2">
-          <span
-            className="font-mono text-[8px] tracking-[0.3em] px-2.5 py-1.5 font-semibold shrink-0"
-            style={{ color: "#050505", backgroundColor: item.color }}
-          >
-            {item.tag}
-          </span>
-          <span className="font-mono text-[10px] tracking-[0.2em] text-zinc-700 shrink-0 tabular-nums">
-            {String(index + 1).padStart(2, "0")}
-          </span>
-        </div>
-
-        {/* Year — bold display */}
-        <div
-          className="font-display font-semibold leading-none tabular-nums"
-          style={{ color: item.color, fontSize: "clamp(1.4rem, 3vw, 2rem)" }}
+        {/* Year */}
+        <span
+          className="font-display font-semibold leading-none shrink-0 tabular-nums w-20 md:w-28"
+          style={{ color: item.color, fontSize: "clamp(1.1rem, 2.2vw, 1.75rem)" }}
         >
           {item.year}
-        </div>
+        </span>
+
+        {/* Tag */}
+        <span
+          className="hidden sm:flex font-mono text-[8px] tracking-[0.22em] px-2.5 py-1 shrink-0 border"
+          style={{ color: item.color, borderColor: `${item.color}50` }}
+        >
+          {item.tag}
+        </span>
 
         {/* Title */}
         <h3
-          className="font-display uppercase font-semibold text-white leading-[0.95] group-hover:text-[#E5FE40] transition-colors duration-300"
-          style={{ fontSize: "clamp(1rem, 2vw, 1.35rem)" }}
+          className="font-display uppercase font-semibold text-white flex-1 leading-[1.05] transition-colors duration-200 group-hover:text-[#E5FE40]"
+          style={{
+            fontSize: "clamp(0.85rem, 1.7vw, 1.2rem)",
+            color: isOpen ? item.color : undefined,
+          }}
         >
           {item.title}
         </h3>
 
-        {/* Gradient rule */}
+        {/* Expand icon */}
+        <span
+          className="w-7 h-7 border flex items-center justify-center shrink-0 transition-colors duration-200"
+          style={{
+            borderColor: isOpen ? item.color : "#27272a",
+            color: isOpen ? item.color : "#52525b",
+          }}
+        >
+          {isOpen
+            ? <Minus size={12} strokeWidth={2} />
+            : <Plus size={12} strokeWidth={2} />
+          }
+        </span>
+      </button>
+
+      {/* ── Detail panel (GSAP-controlled height) ── */}
+      <div ref={detailRef} style={{ height: 0, opacity: 0, overflow: "hidden" }}>
         <div
-          className="h-px w-full shrink-0"
-          style={{ background: `linear-gradient(to right, ${item.color}80, transparent)` }}
-        />
+          className="flex flex-col md:flex-row gap-6 md:gap-16 px-5 md:px-8 py-6 md:py-8 border-b border-zinc-800/60"
+          style={{ borderLeft: `3px solid ${item.color}` }}
+        >
+          {/* Detail text */}
+          <p className="font-mono text-sm md:text-base text-zinc-300 leading-relaxed flex-1 max-w-2xl">
+            {item.detail}
+          </p>
 
-        {/* Detail */}
-        <p className="font-mono text-[11px] text-zinc-500 leading-[1.8] flex-1">
-          {item.detail}
-        </p>
-
-        {/* Footer */}
-        <div className="flex items-center justify-between mt-auto pt-1">
-          <div className="flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full shrink-0 animate-pulse" style={{ backgroundColor: item.color }} />
-            <span className="font-mono text-[8px] tracking-[0.3em] text-zinc-600">VERIFIED</span>
+          {/* Meta panel */}
+          <div className="flex flex-col gap-4 shrink-0 md:min-w-[180px]">
+            <div className="flex items-center gap-2.5">
+              <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ backgroundColor: item.color }} />
+              <span className="font-mono text-[9px] tracking-[0.3em] text-zinc-500">VERIFIED</span>
+            </div>
+            <div>
+              <div className="font-mono text-[8px] tracking-[0.25em] text-zinc-700 mb-1">CATEGORY</div>
+              <div className="font-mono text-[10px] tracking-[0.18em]" style={{ color: item.color }}>
+                {item.tag}
+              </div>
+            </div>
+            <div>
+              <div className="font-mono text-[8px] tracking-[0.25em] text-zinc-700 mb-1">YEAR</div>
+              <div className="font-display font-semibold text-xl" style={{ color: item.color }}>
+                {item.year}
+              </div>
+            </div>
           </div>
-          <ArrowUpRight
-            size={14}
-            className="text-zinc-700 group-hover:text-[#E5FE40] transition-colors duration-300 opacity-0 group-hover:opacity-100"
-          />
         </div>
       </div>
     </div>
@@ -176,7 +207,7 @@ function ImpactCell({ stat, index }) {
   return (
     <div
       ref={ref}
-      className="border-r border-b border-zinc-800/60 p-6 md:p-10 flex flex-col justify-between min-h-[160px] md:min-h-[200px] group hover:bg-[#0a0a0a] transition-colors"
+      className="border-r border-b border-zinc-800/60 p-6 md:p-10 flex flex-col justify-between min-h-[160px] md:min-h-[200px] hover:bg-[#0a0a0a] transition-colors"
     >
       <div className="font-mono text-[10px] tracking-[0.3em] text-zinc-700">
         {String(index + 1).padStart(2, "0")} /
@@ -197,6 +228,7 @@ function ImpactCell({ stat, index }) {
 export default function AchievementsPage() {
   const heroTitleRef = useRef(null);
   const sectionRef = useRef(null);
+  const [openIndex, setOpenIndex] = useState(0); // first row open by default
 
   useEffect(() => {
     document.documentElement.classList.add("dark");
@@ -213,7 +245,6 @@ export default function AchievementsPage() {
     );
   }, []);
 
-  // Section heading line + label animation
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
@@ -221,12 +252,16 @@ export default function AchievementsPage() {
       gsap.fromTo(
         section.querySelector("[data-section-line]"),
         { scaleX: 0 },
-        { scaleX: 1, duration: 1.1, ease: "expo.out", transformOrigin: "left center",
-          scrollTrigger: { trigger: section, start: "top 82%", once: true } }
+        {
+          scaleX: 1, duration: 1.1, ease: "expo.out", transformOrigin: "left center",
+          scrollTrigger: { trigger: section, start: "top 82%", once: true },
+        }
       );
     }, section);
     return () => ctx.revert();
   }, []);
+
+  const handleToggle = (i) => setOpenIndex(openIndex === i ? null : i);
 
   return (
     <>
@@ -297,7 +332,7 @@ export default function AchievementsPage() {
               />
             </div>
 
-            {/* Bold editorial heading */}
+            {/* Editorial heading */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14">
               <h2
                 className="font-display uppercase font-semibold text-white leading-[0.85]"
@@ -312,11 +347,34 @@ export default function AchievementsPage() {
               </p>
             </div>
 
-            {/* 4-column grid — 8 items = 2 clean rows, no empty slots */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-zinc-800 border border-zinc-800">
+            {/* Accordion list */}
+            <div className="border border-zinc-800">
+              {/* Column headers */}
+              <div className="hidden md:flex items-center gap-4 md:gap-8 px-5 md:px-8 py-3 border-b border-zinc-800 bg-[#080808]">
+                <span className="font-mono text-[8px] tracking-[0.25em] text-zinc-700 w-5 shrink-0">#</span>
+                <span className="font-mono text-[8px] tracking-[0.25em] text-zinc-700 w-20 md:w-28 shrink-0">YEAR</span>
+                <span className="font-mono text-[8px] tracking-[0.25em] text-zinc-700 hidden sm:block shrink-0 w-28">CATEGORY</span>
+                <span className="font-mono text-[8px] tracking-[0.25em] text-zinc-700 flex-1">MILESTONE</span>
+                <span className="font-mono text-[8px] tracking-[0.25em] text-zinc-700 w-7 shrink-0 text-center">OPEN</span>
+              </div>
+
               {ACHIEVEMENTS.map((item, i) => (
-                <MilestoneCard key={item.title} item={item} index={i} />
+                <MilestoneRow
+                  key={item.title}
+                  item={item}
+                  index={i}
+                  isOpen={openIndex === i}
+                  onClick={() => handleToggle(i)}
+                />
               ))}
+            </div>
+
+            {/* Hint */}
+            <div className="mt-4 flex items-center gap-2">
+              <span className="w-px h-3 bg-zinc-700" />
+              <span className="font-mono text-[8px] tracking-[0.25em] text-zinc-700">
+                CLICK ANY ROW TO EXPAND DETAILS
+              </span>
             </div>
           </div>
         </section>
