@@ -3,6 +3,7 @@ import Cursor from "@/components/Cursor";
 import Navigation from "@/components/Navigation";
 import ScrollProgressBar from "@/components/ScrollProgressBar";
 import TickerDivider from "@/components/TickerDivider";
+import CalendlyModal from "@/components/CalendlyModal";
 import Hero from "@/components/sections/Hero";
 import About from "@/components/sections/About";
 import Projects from "@/components/sections/Projects";
@@ -27,6 +28,7 @@ export default function Portfolio() {
     <SmoothScroll>
       <ScrollProgressBar />
       <Cursor />
+      <CalendlyModal />
       <Navigation />
       <main data-testid="portfolio-main">
         <Hero />
