@@ -9,11 +9,12 @@ import Portfolio from "@/pages/Portfolio";
 
 // All other routes lazy-loaded — their JS (incl. Three.js for canvas pages)
 // only downloads when the user navigates there
-const CaseStudy       = lazy(() => import("@/pages/CaseStudy"));
+const CaseStudy        = lazy(() => import("@/pages/CaseStudy"));
 const AchievementsPage = lazy(() => import("@/pages/AchievementsPage"));
-const SkillsPage      = lazy(() => import("@/pages/SkillsPage"));
-const ResumePage      = lazy(() => import("@/pages/ResumePage"));
-const PageTransition  = lazy(() => import("@/components/PageTransition"));
+const SkillsPage       = lazy(() => import("@/pages/SkillsPage"));
+const ResumePage       = lazy(() => import("@/pages/ResumePage"));
+const PageTransition   = lazy(() => import("@/components/PageTransition"));
+const CommandPalette   = lazy(() => import("@/components/CommandPalette"));
 
 // Minimal dark fallback while lazy chunk loads
 function PageLoader() {
@@ -64,6 +65,9 @@ function App() {
         <BrowserRouter>
           <Suspense fallback={null}>
             <PageTransition />
+          </Suspense>
+          <Suspense fallback={null}>
+            <CommandPalette />
           </Suspense>
           <Routes>
             <Route path="/" element={<Portfolio />} />

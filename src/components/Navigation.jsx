@@ -95,6 +95,7 @@ function HoverText({ children, className = "" }) {
 export default function Navigation() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
   const isHome = location.pathname === "/";
@@ -104,6 +105,23 @@ export default function Navigation() {
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  useEffect(() => {
+    if (!isHome) { setActiveSection(""); return; }
+    const ids = ["about", "projects", "skills", "contact"];
+    const observers = [];
+    ids.forEach((id) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const io = new IntersectionObserver(
+        ([entry]) => { if (entry.isIntersecting) setActiveSection(id); },
+        { rootMargin: "-35% 0px -55% 0px" }
+      );
+      io.observe(el);
+      observers.push(io);
+    });
+    return () => observers.forEach((io) => io.disconnect());
+  }, [isHome, location.pathname]);
 
   const handleAnchorClick = (e, href, label) => {
     e.preventDefault();
@@ -136,18 +154,22 @@ export default function Navigation() {
         </a>
 
         <div className="hidden md:flex items-center gap-1">
-          {ANCHOR_LINKS.map((l) => (
-            <a
-              key={l.href}
-              href={isHome ? l.href : "/" + l.href}
-              onClick={(e) => handleAnchorClick(e, l.href, l.label)}
-              data-testid={`nav-link-${l.label.toLowerCase()}`}
-              className="group px-3 py-2 font-mono text-xs tracking-[0.2em] text-zinc-300 hover:text-zinc-300 transition-colors"
-            >
-              <span className="text-[#E5FE40] mr-1">/</span>
-              <HoverText>{l.label}</HoverText>
-            </a>
-          ))}
+          {ANCHOR_LINKS.map((l) => {
+            const sectionId = l.href.replace("#", "");
+            const isActive = isHome && activeSection === sectionId;
+            return (
+              <a
+                key={l.href}
+                href={isHome ? l.href : "/" + l.href}
+                onClick={(e) => handleAnchorClick(e, l.href, l.label)}
+                data-testid={`nav-link-${l.label.toLowerCase()}`}
+                className={`group px-3 py-2 font-mono text-xs tracking-[0.2em] transition-colors ${isActive ? "text-[#E5FE40]" : "text-zinc-300"}`}
+              >
+                <span className="text-[#E5FE40] mr-1">/</span>
+                <HoverText>{l.label}</HoverText>
+              </a>
+            );
+          })}
           {PAGE_LINKS.map((l) => (
             <Link
               key={l.to}
