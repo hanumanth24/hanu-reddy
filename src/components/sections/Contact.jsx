@@ -6,9 +6,7 @@ import { Mail, Phone, MapPin, Download, ArrowUpRight, Send, Calendar, Link2 } fr
 import { events } from "@/lib/analytics";
 import { openCalendly } from "@/lib/calendly";
 
-// Web3Forms — free, works on Vercel (no backend needed).
-// Get your key: https://web3forms.com → enter hanureddy4268@gmail.com → confirm email
-const W3F_KEY = import.meta.env.VITE_WEB3FORMS_KEY || "";
+const W3F_KEY = "69e5ccdb-af6f-4375-b597-86196681e583";
 
 export default function Contact() {
   const [form, setForm] = useState({
