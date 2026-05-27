@@ -100,6 +100,18 @@
     </script>
   </head>
   <body style="background:#050505;margin:0;">
+    <!-- Apply stored theme before React renders to prevent accent-colour flash -->
+    <script>
+      (function(){
+        var t=localStorage.getItem('portfolio-theme')||'yellow';
+        var a={yellow:'#E5FE40',red:'#FF3333',blue:'#00D4FF',green:'#00FF41',purple:'#B44FFF',orange:'#FF6B35'};
+        var h={yellow:'#CBE02D',red:'#CC2020',blue:'#00A8CC',green:'#00CC34',purple:'#9033CC',orange:'#CC5520'};
+        var el=document.documentElement;
+        el.setAttribute('data-theme',a[t]?t:'yellow');
+        el.style.setProperty('--accent',a[t]||a.yellow);
+        el.style.setProperty('--accent-hover',h[t]||h.yellow);
+      })();
+    </script>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <a href="#main-content" class="skip-to-content">Skip to content</a>
 

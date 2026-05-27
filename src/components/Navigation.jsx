@@ -1,4 +1,5 @@
 import { useEffect, useState, memo } from "react";
+import { THEMES, applyTheme, getStoredTheme } from "@/lib/theme";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
 import { events } from "@/lib/analytics";
@@ -278,6 +279,26 @@ export default function Navigation() {
                 >
                   HIRE ME
                 </button>
+
+                {/* Theme swatches */}
+                <div className="mt-5 pt-4 border-t border-zinc-900">
+                  <div className="font-mono text-[9px] tracking-[0.25em] text-zinc-600 mb-3">COLOUR THEME</div>
+                  <div className="flex gap-2">
+                    {THEMES.map((t) => (
+                      <button
+                        key={t.id}
+                        onClick={() => applyTheme(t.id)}
+                        title={t.label}
+                        aria-label={`Switch to ${t.label} theme`}
+                        className="w-7 h-7 border-2 transition-transform hover:scale-110"
+                        style={{
+                          backgroundColor: t.accent,
+                          borderColor: getStoredTheme() === t.id ? "#ffffff" : "transparent",
+                        }}
+                      />
+                    ))}
+                  </div>
+                </div>
               </div>
             </motion.div>
           </>

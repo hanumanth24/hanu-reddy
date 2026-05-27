@@ -15,6 +15,7 @@ const SkillsPage       = lazy(() => import("@/pages/SkillsPage"));
 const ResumePage       = lazy(() => import("@/pages/ResumePage"));
 const PageTransition   = lazy(() => import("@/components/PageTransition"));
 const CommandPalette   = lazy(() => import("@/components/CommandPalette"));
+const ThemePicker      = lazy(() => import("@/components/ThemePicker"));
 
 // Minimal dark fallback while lazy chunk loads
 function PageLoader() {
@@ -68,6 +69,9 @@ function App() {
           </Suspense>
           <Suspense fallback={null}>
             <CommandPalette />
+          </Suspense>
+          <Suspense fallback={null}>
+            <ThemePicker />
           </Suspense>
           <Routes>
             <Route path="/" element={<Portfolio />} />

@@ -3,8 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "motion/react";
 import { openCalendly } from "@/lib/calendly";
 import { PROFILE } from "@/lib/data";
+import { THEMES, applyTheme } from "@/lib/theme";
 
-const COMMANDS = [
+const NAV_COMMANDS = [
   { id: "resume",       label: "Download Resume",      tag: "FILE",     hint: "Opens PDF in new tab" },
   { id: "call",         label: "Book a 30-min Call",   tag: "CALENDLY", hint: "Opens Calendly scheduler" },
   { id: "linkedin",     label: "Open LinkedIn",         tag: "SOCIAL",   hint: "hanu-reddy-8b04b7167" },
@@ -15,6 +16,17 @@ const COMMANDS = [
   { id: "achievements", label: "Achievements Page",     tag: "PAGE",     hint: "Timeline & milestones" },
   { id: "resume-page",  label: "Resume Page",           tag: "PAGE",     hint: "Full career profile" },
 ];
+
+const THEME_COMMANDS = THEMES.map((t) => ({
+  id: `theme-${t.id}`,
+  label: `Theme: ${t.label}`,
+  tag: "THEME",
+  hint: t.accent,
+  _themeId: t.id,
+  _accent: t.accent,
+}));
+
+const COMMANDS = [...NAV_COMMANDS, ...THEME_COMMANDS];
 
 export default function CommandPalette() {
   const [open, setOpen] = useState(false);
@@ -70,6 +82,7 @@ export default function CommandPalette() {
 
   const execute = (cmd) => {
     setOpen(false);
+    if (cmd._themeId) { applyTheme(cmd._themeId); return; }
     switch (cmd.id) {
       case "resume":       window.open(PROFILE.resumeUrl, "_blank"); break;
       case "call":         openCalendly("cmd-palette"); break;
@@ -148,9 +161,14 @@ export default function CommandPalette() {
                       i === selected ? "bg-zinc-800/70" : "hover:bg-zinc-900/50"
                     }`}
                   >
-                    <div>
-                      <div className="font-mono text-sm text-white tracking-wide">{cmd.label}</div>
-                      <div className="font-mono text-[9px] text-zinc-600 tracking-[0.15em] mt-0.5">{cmd.hint}</div>
+                    <div className="flex items-center gap-3">
+                      {cmd._accent && (
+                        <span className="w-3 h-3 shrink-0 border border-zinc-700" style={{ backgroundColor: cmd._accent }} />
+                      )}
+                      <div>
+                        <div className="font-mono text-sm text-white tracking-wide">{cmd.label}</div>
+                        <div className="font-mono text-[9px] text-zinc-600 tracking-[0.15em] mt-0.5">{cmd.hint}</div>
+                      </div>
                     </div>
                     <span className={`font-mono text-[9px] tracking-[0.25em] border px-1.5 py-0.5 shrink-0 ml-4 ${
                       i === selected ? "text-[#E5FE40] border-[#E5FE40]/40" : "text-zinc-600 border-zinc-800"
