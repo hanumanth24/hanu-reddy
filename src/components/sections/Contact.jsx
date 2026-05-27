@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { motion } from "motion/react";
-import axios from "axios";
 import { toast } from "sonner";
 import { PROFILE } from "@/lib/data";
 import { Mail, Phone, MapPin, Download, ArrowUpRight, Send, Calendar, Link2 } from "lucide-react";
 import { events } from "@/lib/analytics";
 import { openCalendly } from "@/lib/calendly";
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "";
-const API = `${BACKEND_URL}/api`;
+// Web3Forms — free, works on Vercel (no backend needed).
+// Get your key: https://web3forms.com → enter hanureddy4268@gmail.com → confirm email
+const W3F_KEY = import.meta.env.VITE_WEB3FORMS_KEY || "";
 
 export default function Contact() {
   const [form, setForm] = useState({
@@ -30,22 +30,30 @@ export default function Contact() {
     }
     setSubmitting(true);
     try {
-      await axios.post(`${API}/contact`, {
-        name: form.name,
-        email: form.email,
-        subject: form.subject || null,
-        message: form.message,
+      const res = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          access_key: W3F_KEY,
+          subject: form.subject
+            ? `Portfolio contact: ${form.subject}`
+            : `Portfolio contact from ${form.name}`,
+          from_name: form.name,
+          email: form.email,
+          message: form.message,
+          botcheck: false,
+        }),
       });
+
+      const data = await res.json();
+      if (!data.success) throw new Error(data.message || "Submission failed");
+
       toast.success("MESSAGE TRANSMITTED ✓");
       events.contactSubmit(true, "ok");
       setForm({ name: "", email: "", subject: "", message: "" });
     } catch (err) {
-      const detail =
-        err?.response?.data?.detail ||
-        err?.response?.data?.[0]?.msg ||
-        "Failed to send. Try again.";
-      toast.error(typeof detail === "string" ? detail : "Failed to send");
-      events.contactSubmit(false, typeof detail === "string" ? detail : "error");
+      toast.error("Failed to send — email me directly at hanureddy4268@gmail.com");
+      events.contactSubmit(false, String(err));
     } finally {
       setSubmitting(false);
     }
