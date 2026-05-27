@@ -436,30 +436,39 @@ export const CERTIFICATIONS = [
   },
 ];
 
+// Update name + company once approved for use. Set nda:true to show "Name withheld" label.
 export const TESTIMONIALS = [
   {
     quote:
       "Hanumanth turned our AEM stack into something the marketing org could actually move at — journey-driven, measurable, and fast.",
-    author: "VP, Digital Platforms",
+    name: "",
+    role: "VP, Digital Platforms",
     company: "Fortune 500 Retail",
+    nda: true,
   },
   {
     quote:
       "A rare blend of Adobe-cert-deep architect and pragmatic engineer. Identity, governance, and personalization — he owns the whole stack.",
-    author: "Director of Engineering",
-    company: "Financial Services",
+    name: "",
+    role: "Director of Engineering",
+    company: "Fortune 500 Financial Services",
+    nda: true,
   },
   {
     quote:
       "He delivered an EDS rollout with measurable load-time wins inside a quarter. That doesn't happen without someone like him driving it.",
-    author: "Principal Architect",
-    company: "Enterprise Telecom",
+    name: "",
+    role: "Principal Architect",
+    company: "Fortune 500 Telecom",
+    nda: true,
   },
   {
     quote:
       "Quiet, thorough, surgical. He bridges business and offshore teams without drama and ships on time.",
-    author: "Program Manager",
-    company: "Global B2B",
+    name: "",
+    role: "Program Manager",
+    company: "Global Enterprise",
+    nda: true,
   },
 ];
 

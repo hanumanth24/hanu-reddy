@@ -30,7 +30,7 @@ export default function Portfolio() {
       <Cursor />
       <CalendlyModal />
       <Navigation />
-      <main data-testid="portfolio-main">
+      <main id="main-content" data-testid="portfolio-main" aria-label="Portfolio main content">
         <Hero />
         <TickerDivider />
         <About />

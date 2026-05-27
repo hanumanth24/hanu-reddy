@@ -82,11 +82,16 @@ function TestimonialCard({ t }) {
       <figcaption className="flex items-center gap-3 border-t border-zinc-800 pt-4">
         <div className="w-8 h-8 bg-[#E5FE40]/10 border border-[#E5FE40]/30 flex items-center justify-center shrink-0">
           <span className="font-mono text-[9px] font-bold text-[#E5FE40]">
-            {t.author.split(" ").map((w) => w[0]).join("").slice(0, 2)}
+            {t.nda ? "NDA" : (t.name || t.role).split(" ").map((w) => w[0]).join("").slice(0, 2)}
           </span>
         </div>
         <div>
-          <div className="font-mono text-xs text-white tracking-wide">{t.author}</div>
+          <div className="font-mono text-xs text-white tracking-wide">
+            {t.name || t.role}
+            {t.nda && (
+              <span className="ml-2 font-mono text-[7px] tracking-[0.25em] text-zinc-600 border border-zinc-800 px-1.5 py-0.5 align-middle">NDA</span>
+            )}
+          </div>
           <div className="font-mono text-[10px] text-[#E5FE40] tracking-[0.2em] mt-0.5">
             {t.company}
           </div>

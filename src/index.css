@@ -237,3 +237,59 @@ canvas {
 [data-debug-wrapper="true"] {
     display: contents !important;
 }
+
+/* ── Accessibility: focus-visible ── */
+/* cursor:none hides the system cursor, so keyboard focus MUST be visible */
+:focus {
+    outline: none;
+}
+:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+}
+/* Buttons and links get a stronger ring */
+a:focus-visible,
+button:focus-visible,
+[role="button"]:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+    box-shadow: 0 0 0 4px rgba(229, 254, 64, 0.15);
+}
+/* Skip-to-content link for screen readers */
+.skip-to-content {
+    position: fixed;
+    top: -100px;
+    left: 16px;
+    z-index: 999999;
+    padding: 12px 20px;
+    background: var(--accent);
+    color: #050505;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: top 0.15s ease;
+}
+.skip-to-content:focus {
+    top: 16px;
+    outline: 2px solid #050505;
+    outline-offset: 2px;
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    .animate-pulse,
+    .animate-bounce,
+    .animate-marquee {
+        animation: none !important;
+    }
+}
