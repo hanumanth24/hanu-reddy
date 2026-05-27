@@ -98,8 +98,50 @@ export default function Skills() {
   const titleRef = useRef(null);
   const sectionRef = useRef(null);
   const graphRef = useRef(null);
+  const carouselRef = useRef(null);
   const mouse = useRef({ x: 0, y: 0 });
   useTitleReveal(titleRef);
+
+  // Auto-scroll for mobile carousel — starts when section enters view,
+  // pauses on touch so users can swipe freely, resumes 2s after lift.
+  useEffect(() => {
+    const el = carouselRef.current;
+    if (!el || !window.matchMedia("(pointer: coarse)").matches) return;
+
+    let tween = null;
+
+    const start = () => {
+      const maxScroll = el.scrollWidth - el.clientWidth;
+      if (maxScroll <= 0 || tween) return;
+      tween = gsap.to(el, {
+        scrollLeft: maxScroll,
+        duration: 22,
+        ease: "none",
+        repeat: -1,
+        yoyo: true,
+        repeatDelay: 0.6,
+      });
+    };
+
+    const pause = () => tween?.pause();
+    const resume = () => { setTimeout(() => tween?.resume(), 2000); };
+
+    el.addEventListener("touchstart", pause, { passive: true });
+    el.addEventListener("touchend", resume, { passive: true });
+
+    const io = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) setTimeout(start, 1400); },
+      { threshold: 0.3 }
+    );
+    io.observe(el);
+
+    return () => {
+      io.disconnect();
+      tween?.kill();
+      el.removeEventListener("touchstart", pause);
+      el.removeEventListener("touchend", resume);
+    };
+  }, []);
 
   useEffect(() => {
     const onMove = (e) => {
@@ -312,6 +354,7 @@ export default function Skills() {
         {/* ── Adobe Product Feature Cards ── */}
         {/* Mobile: horizontal swipe carousel. Desktop: even grid */}
         <div
+          ref={carouselRef}
           data-products-grid
           className="overflow-x-auto scrollbar-hide border border-zinc-800 border-t-0 mb-20"
         >
