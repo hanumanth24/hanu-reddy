@@ -129,13 +129,13 @@ export default function Footer() {
         {/* Massive scramble text */}
         <h2
           ref={bigTextRef}
-          className="font-display uppercase font-semibold text-white leading-[0.85] select-none"
+          className="font-display uppercase font-semibold text-[#E5FE40] leading-[0.85] select-none"
           style={{
             fontSize: "clamp(2.5rem, 14vw, 14rem)",
             clipPath: "inset(0 100% 0 0)",
           }}
         >
-          <span className="text-[#E5FE40]">BARLA._</span>
+          BARLA._
         </h2>
 
         {/* Footer links */}
