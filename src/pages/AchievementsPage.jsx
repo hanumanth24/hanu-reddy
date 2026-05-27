@@ -27,7 +27,7 @@ function Counter({ value, suffix, label, delay = 0 }) {
     const proxy = { val: 0 };
     gsap.to(proxy, {
       val: value,
-      duration: 2.4,
+      duration: 1.4,
       ease: "power3.out",
       delay,
       onUpdate() { if (numRef.current) numRef.current.textContent = Math.floor(proxy.val); },

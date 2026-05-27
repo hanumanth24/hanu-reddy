@@ -1,6 +1,28 @@
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { MeshDistortMaterial, Points, PointMaterial } from "@react-three/drei";
-import { useRef, useMemo, Suspense, createElement as h } from "react";
+import { useRef, useMemo, Suspense, useEffect, createElement as h } from "react";
+
+function PauseController() {
+  const { gl, invalidate } = useThree();
+  useEffect(() => {
+    const canvas = gl.domElement;
+    let rafId, running = false;
+    const tick = () => {
+      if (!running) return;
+      invalidate();
+      rafId = requestAnimationFrame(tick);
+    };
+    const io = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting && !running) { running = true; tick(); }
+      else if (!e.isIntersecting) { running = false; cancelAnimationFrame(rafId); }
+    }, { rootMargin: "100px" });
+    io.observe(canvas);
+    running = true;
+    tick();
+    return () => { running = false; cancelAnimationFrame(rafId); io.disconnect(); };
+  }, [gl, invalidate]);
+  return null;
+}
 
 // Detect touch/mobile — disable heavy canvas on low-power devices
 const isMobile =
@@ -151,11 +173,15 @@ export default function HeroCanvas({ mouse }) {
 
   return (
     <Canvas
+      frameloop="demand"
       dpr={[1, 1.5]}
       camera={{ position: [0, 0, 5], fov: 50 }}
       gl={{ antialias: true, alpha: false, powerPreference: "high-performance" }}
     >
-      <Suspense fallback={null}>{h(Scene, { mouse })}</Suspense>
+      <Suspense fallback={null}>
+        {h(PauseController, null)}
+        {h(Scene, { mouse })}
+      </Suspense>
     </Canvas>
   );
 }

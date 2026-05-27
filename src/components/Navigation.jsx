@@ -21,10 +21,12 @@ const PAGE_LINKS = [
 // Typewriter logo — memoised so parent scroll re-renders don't reset the animation
 const AnimatedLogo = memo(function AnimatedLogo() {
   const FULL = "HR.BARLA";
-  const [text, setText] = useState("");
-  const [typing, setTyping] = useState(true);
+  const played = typeof sessionStorage !== "undefined" && sessionStorage.getItem("logo-played");
+  const [text, setText] = useState(played ? FULL : "");
+  const [typing, setTyping] = useState(!played);
 
   useEffect(() => {
+    if (played) return;
     let intervalId;
     let i = 0;
     const startId = setTimeout(() => {
@@ -34,6 +36,7 @@ const AnimatedLogo = memo(function AnimatedLogo() {
         if (i >= FULL.length) {
           clearInterval(intervalId);
           setTyping(false);
+          sessionStorage.setItem("logo-played", "1");
         }
       }, 90);
     }, 500);

@@ -145,12 +145,14 @@ export default function About() {
         y: mouse.current.y * 6,
         duration: 0.9,
         ease: "power2.out",
+        overwrite: "auto",
       });
       gsap.to(rightColRef.current, {
         x: mouse.current.x * -5,
         y: mouse.current.y * -3,
         duration: 1.1,
         ease: "power2.out",
+        overwrite: "auto",
       });
     };
     window.addEventListener("mousemove", onMove);
