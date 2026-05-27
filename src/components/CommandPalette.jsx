@@ -32,8 +32,13 @@ export default function CommandPalette() {
       }
       if (e.key === "Escape") setOpen(false);
     };
+    const onExternal = () => setOpen(true);
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    window.addEventListener("open-command-palette", onExternal);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      window.removeEventListener("open-command-palette", onExternal);
+    };
   }, []);
 
   useEffect(() => {

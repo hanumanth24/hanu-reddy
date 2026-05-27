@@ -47,6 +47,8 @@ function InfiniteMarquee({ items, speed = 40, reverse = false }) {
       className="overflow-hidden cursor-default"
       onMouseEnter={pause}
       onMouseLeave={resume}
+      onTouchStart={pause}
+      onTouchEnd={resume}
     >
       <div ref={rowRef} className="flex gap-4 w-max py-2">
         {tripled.map((t, i) => (

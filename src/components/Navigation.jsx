@@ -106,6 +106,12 @@ export default function Navigation() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [open]);
+
   useEffect(() => {
     if (!isHome) { setActiveSection(""); return; }
     const ids = ["about", "projects", "skills", "contact"];
@@ -193,6 +199,16 @@ export default function Navigation() {
           </button>
         </div>
 
+        {/* ⌘ Command palette trigger — mobile only */}
+        <button
+          type="button"
+          onClick={() => window.dispatchEvent(new CustomEvent("open-command-palette"))}
+          className="md:hidden w-10 h-10 border border-zinc-800 flex items-center justify-center text-zinc-500 hover:text-[#E5FE40] hover:border-zinc-600 transition-colors mr-2"
+          aria-label="Open command palette"
+        >
+          <span className="font-mono text-[11px]">⌘</span>
+        </button>
+
         <button
           data-testid="nav-mobile-toggle"
           onClick={() => setOpen((s) => !s)}
@@ -214,40 +230,57 @@ export default function Navigation() {
 
       <AnimatePresence>
         {open && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            className="md:hidden border-t border-zinc-800 bg-[#050505]"
-          >
-            <div className="px-6 py-6 flex flex-col gap-2">
-              {ANCHOR_LINKS.map((l) => (
-                <a
-                  key={l.href}
-                  href={isHome ? l.href : "/" + l.href}
-                  onClick={(e) => handleAnchorClick(e, l.href, l.label)}
-                  data-testid={`nav-mobile-link-${l.label.toLowerCase()}`}
-                  className="py-3 font-mono text-sm tracking-[0.2em] text-white border-b border-zinc-900"
+          <>
+            {/* Tap-outside backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="md:hidden fixed inset-0 top-[57px] bg-[#050505]/60 z-[-1]"
+              onClick={() => setOpen(false)}
+            />
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="md:hidden border-t border-zinc-800 bg-[#050505]"
+            >
+              <div className="px-6 py-4 flex flex-col gap-1">
+                {ANCHOR_LINKS.map((l) => (
+                  <a
+                    key={l.href}
+                    href={isHome ? l.href : "/" + l.href}
+                    onClick={(e) => handleAnchorClick(e, l.href, l.label)}
+                    data-testid={`nav-mobile-link-${l.label.toLowerCase()}`}
+                    className="py-4 font-mono text-sm tracking-[0.2em] text-white border-b border-zinc-900 flex items-center"
+                  >
+                    <span className="text-[#E5FE40] mr-2">/</span>
+                    {l.label}
+                  </a>
+                ))}
+                {PAGE_LINKS.map((l) => (
+                  <Link
+                    key={l.to}
+                    to={l.to}
+                    onClick={() => setOpen(false)}
+                    className={`py-4 font-mono text-sm tracking-[0.2em] border-b border-zinc-900 flex items-center ${
+                      location.pathname === l.to ? "text-[#E5FE40]" : "text-white"
+                    }`}
+                  >
+                    <span className="text-[#E5FE40] mr-2">/</span>
+                    {l.label}
+                  </Link>
+                ))}
+                <button
+                  type="button"
+                  onClick={() => { setOpen(false); openCalendly("mobile-nav"); }}
+                  className="mt-3 btn-brutal w-full justify-center"
                 >
-                  <span className="text-[#E5FE40] mr-2">/</span>
-                  {l.label}
-                </a>
-              ))}
-              {PAGE_LINKS.map((l) => (
-                <Link
-                  key={l.to}
-                  to={l.to}
-                  onClick={() => setOpen(false)}
-                  className={`py-3 font-mono text-sm tracking-[0.2em] border-b border-zinc-900 ${
-                    location.pathname === l.to ? "text-[#E5FE40]" : "text-white"
-                  }`}
-                >
-                  <span className="text-[#E5FE40] mr-2">/</span>
-                  {l.label}
-                </Link>
-              ))}
-            </div>
-          </motion.div>
+                  HIRE ME
+                </button>
+              </div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
     </nav>
