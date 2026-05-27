@@ -28,17 +28,59 @@ export default function Contact() {
     }
     setSubmitting(true);
     try {
+      const htmlMessage = `
+<div style="font-family:'Courier New',monospace;background:#050505;padding:40px;max-width:600px;margin:0 auto;border:1px solid #333;">
+  <div style="border-bottom:2px solid #E5FE40;padding-bottom:20px;margin-bottom:30px;">
+    <span style="color:#E5FE40;font-size:11px;letter-spacing:0.3em;">[ NEW PORTFOLIO CONTACT ]</span>
+    <h1 style="color:#ffffff;font-size:28px;margin:8px 0 0;font-weight:700;text-transform:uppercase;">Incoming Message</h1>
+  </div>
+
+  <table style="width:100%;border-collapse:collapse;margin-bottom:30px;">
+    <tr>
+      <td style="color:#666;font-size:10px;letter-spacing:0.25em;padding:12px 0 4px;border-top:1px solid #1a1a1a;">FROM</td>
+    </tr>
+    <tr>
+      <td style="color:#ffffff;font-size:16px;font-weight:600;padding-bottom:12px;">${form.name}</td>
+    </tr>
+    <tr>
+      <td style="color:#666;font-size:10px;letter-spacing:0.25em;padding:12px 0 4px;border-top:1px solid #1a1a1a;">EMAIL</td>
+    </tr>
+    <tr>
+      <td style="padding-bottom:12px;"><a href="mailto:${form.email}" style="color:#E5FE40;text-decoration:none;font-size:14px;">${form.email}</a></td>
+    </tr>
+    ${form.subject ? `
+    <tr>
+      <td style="color:#666;font-size:10px;letter-spacing:0.25em;padding:12px 0 4px;border-top:1px solid #1a1a1a;">SUBJECT</td>
+    </tr>
+    <tr>
+      <td style="color:#ffffff;font-size:14px;padding-bottom:12px;">${form.subject}</td>
+    </tr>` : ""}
+    <tr>
+      <td style="color:#666;font-size:10px;letter-spacing:0.25em;padding:12px 0 4px;border-top:1px solid #1a1a1a;">MESSAGE</td>
+    </tr>
+    <tr>
+      <td style="color:#cccccc;font-size:14px;line-height:1.7;padding-bottom:12px;white-space:pre-wrap;">${form.message}</td>
+    </tr>
+  </table>
+
+  <div style="border-top:1px solid #1a1a1a;padding-top:20px;display:flex;justify-content:space-between;">
+    <span style="color:#444;font-size:10px;letter-spacing:0.2em;">HANUREDDY.COM / PORTFOLIO</span>
+    <span style="color:#444;font-size:10px;letter-spacing:0.2em;">${new Date().toLocaleDateString("en-US",{year:"numeric",month:"short",day:"numeric"})}</span>
+  </div>
+</div>`;
+
       const res = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify({
           access_key: W3F_KEY,
           subject: form.subject
-            ? `Portfolio contact: ${form.subject}`
-            : `Portfolio contact from ${form.name}`,
+            ? `[Portfolio] ${form.subject} — from ${form.name}`
+            : `[Portfolio] New message from ${form.name}`,
           from_name: form.name,
+          replyto: form.email,
           email: form.email,
-          message: form.message,
+          message: htmlMessage,
           botcheck: false,
         }),
       });
