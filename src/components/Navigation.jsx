@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, memo } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
 import { events } from "@/lib/analytics";
@@ -17,6 +17,45 @@ const PAGE_LINKS = [
   { label: "RESUME",       to: "/resume" },
   { label: "ACHIEVEMENTS", to: "/achievements" },
 ];
+
+// Typewriter logo — memoised so parent scroll re-renders don't reset the animation
+const AnimatedLogo = memo(function AnimatedLogo() {
+  const FULL = "HR.BARLA";
+  const [text, setText] = useState("");
+  const [typing, setTyping] = useState(true);
+
+  useEffect(() => {
+    let intervalId;
+    let i = 0;
+    const startId = setTimeout(() => {
+      intervalId = setInterval(() => {
+        i += 1;
+        setText(FULL.slice(0, i));
+        if (i >= FULL.length) {
+          clearInterval(intervalId);
+          setTyping(false);
+        }
+      }, 90);
+    }, 500);
+    return () => {
+      clearTimeout(startId);
+      clearInterval(intervalId);
+    };
+  }, []);
+
+  return (
+    <span className="flex items-center gap-3">
+      <span className="w-3 h-3 bg-[#E5FE40] shrink-0" />
+      <span className="font-mono text-xs tracking-[0.3em] text-white inline-flex items-center">
+        {text}
+        <span
+          className="inline-block w-[1.5px] h-[0.75em] bg-[#E5FE40] ml-[2px]"
+          style={{ animation: typing ? "none" : "cursor-blink 1s step-start infinite" }}
+        />
+      </span>
+    </span>
+  );
+});
 
 // Letter-doubling hover: render each char twice in a clipped column so the
 // duplicate slides up on hover (Luke-Baffait-style).
@@ -89,12 +128,8 @@ export default function Navigation() {
           href={isHome ? "#hero" : "/"}
           onClick={(e) => isHome ? handleAnchorClick(e, "#hero") : null}
           data-testid="nav-logo"
-          className="flex items-center gap-3"
         >
-          <span className="w-3 h-3 bg-[#E5FE40]" />
-          <span className="font-mono text-xs tracking-[0.3em] text-white">
-            HR.BARLA
-          </span>
+          <AnimatedLogo />
         </a>
 
         <div className="hidden md:flex items-center gap-1">
