@@ -5,7 +5,7 @@ import { useRef, Suspense, createElement as h, useMemo, useEffect } from "react"
 import * as THREE from "three";
 
 function ProfileMesh({ mouse }) {
-  const texture = useLoader(TextureLoader, "/hanu.png");
+  const texture = useLoader(TextureLoader, "/hanu.webp");
   const meshRef = useRef();
 
   useFrame((state) => {

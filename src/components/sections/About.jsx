@@ -328,13 +328,18 @@ export default function About() {
                 className="relative border border-zinc-800 overflow-hidden"
                 style={{ aspectRatio: "4/5", clipPath: "inset(0 0 100% 0)" }}
               >
-                {isMobile ? (
-                  <img
-                    src="/hanu.png"
-                    alt="Hanumanth Reddy Barla"
-                    className="absolute inset-0 w-full h-full object-cover"
-                  />
-                ) : (
+                {/* Instant blur-up placeholder — always present, painted over by canvas */}
+                <img
+                  src="/hanu.webp"
+                  alt="Hanumanth Reddy Barla"
+                  fetchpriority="high"
+                  decoding="async"
+                  className="absolute inset-0 w-full h-full object-cover"
+                  style={isMobile ? {} : { filter: "blur(0px)" }}
+                />
+
+                {/* 3-D distortion canvas — desktop only */}
+                {!isMobile && (
                   <LazyMount className="absolute inset-0">
                     <ProfilePicCanvas mouse={mouse} />
                   </LazyMount>
