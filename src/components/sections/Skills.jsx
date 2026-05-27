@@ -310,40 +310,36 @@ export default function Skills() {
         </div>
 
         {/* ── Adobe Product Feature Cards ── */}
+        {/* Mobile: horizontal swipe carousel. Desktop: even grid */}
         <div
           data-products-grid
-          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-px bg-zinc-800 border border-zinc-800 border-t-0 mb-20"
+          className="overflow-x-auto scrollbar-hide border border-zinc-800 border-t-0 mb-20"
         >
-          {ADOBE_PRODUCTS.map((p) => (
-            <div
-              key={p.id}
-              data-product-card
-              data-cursor="hover"
-              className="p-5 flex flex-col gap-3 bg-[#080808] hover:bg-[#0d0d0d] transition-colors group"
-              style={{ opacity: 0 }}
-            >
-              {/* Color accent bar */}
-              <div className="h-[2px] w-7 transition-all duration-300 group-hover:w-full" style={{ backgroundColor: p.color }} />
-
-              {/* Product name */}
+          <div className="flex md:grid md:grid-cols-4 lg:grid-cols-7 gap-px bg-zinc-800 w-max md:w-auto">
+            {ADOBE_PRODUCTS.map((p) => (
               <div
-                className="font-mono text-[9px] font-bold tracking-[0.18em] leading-tight"
-                style={{ color: p.color }}
+                key={p.id}
+                data-product-card
+                data-cursor="hover"
+                className="w-[200px] md:w-auto p-5 flex flex-col gap-3 bg-[#080808] hover:bg-[#0d0d0d] transition-colors group"
+                style={{ opacity: 0 }}
               >
-                {p.name}
+                <div className="h-[2px] w-7 transition-all duration-300 group-hover:w-full" style={{ backgroundColor: p.color }} />
+                <div
+                  className="font-mono text-[10px] font-bold tracking-[0.18em] leading-tight"
+                  style={{ color: p.color }}
+                >
+                  {p.name}
+                </div>
+                <div className="font-mono text-[8px] tracking-[0.25em] text-zinc-600 uppercase border border-zinc-800 px-1.5 py-0.5 self-start">
+                  {p.tag}
+                </div>
+                <div className="font-mono text-[9px] text-zinc-500 leading-relaxed mt-auto">
+                  {p.desc}
+                </div>
               </div>
-
-              {/* Tag */}
-              <div className="font-mono text-[7px] tracking-[0.25em] text-zinc-600 uppercase border border-zinc-800 px-1.5 py-0.5 self-start">
-                {p.tag}
-              </div>
-
-              {/* Description */}
-              <div className="font-mono text-[8px] text-zinc-500 leading-relaxed mt-auto">
-                {p.desc}
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
 
         {/* ── Full Stack Skills ── */}

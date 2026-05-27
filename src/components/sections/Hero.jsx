@@ -220,7 +220,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.3 }}
-            className="mt-10 flex flex-wrap items-center gap-4"
+            className="mt-10 flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-3 sm:gap-4"
           >
             <a
               href={PROFILE.resumeUrl}
@@ -228,33 +228,35 @@ export default function Hero() {
               rel="noopener noreferrer"
               onClick={() => events.resumeClick("hero")}
               data-testid="hero-resume-btn"
-              className="btn-brutal"
+              className="btn-brutal justify-center sm:justify-start"
             >
               <Download size={14} strokeWidth={2.5} />
               DOWNLOAD RESUME
             </a>
-            <button
-              type="button"
-              onClick={() => openCalendly("hero")}
-              data-testid="hero-calendly-btn"
-              className="btn-brutal btn-brutal-outline"
-            >
-              <Calendar size={14} strokeWidth={2.5} />
-              BOOK A CALL
-            </button>
-            <a
-              href="#projects"
-              onClick={(e) => {
-                e.preventDefault();
-                document
-                  .querySelector("#projects")
-                  ?.scrollIntoView({ behavior: "smooth" });
-              }}
-              data-testid="hero-view-work-btn"
-              className="btn-brutal btn-brutal-outline"
-            >
-              VIEW WORK →
-            </a>
+            <div className="flex gap-3 sm:gap-4">
+              <button
+                type="button"
+                onClick={() => openCalendly("hero")}
+                data-testid="hero-calendly-btn"
+                className="btn-brutal btn-brutal-outline flex-1 sm:flex-none justify-center"
+              >
+                <Calendar size={14} strokeWidth={2.5} />
+                BOOK A CALL
+              </button>
+              <a
+                href="#projects"
+                onClick={(e) => {
+                  e.preventDefault();
+                  document
+                    .querySelector("#projects")
+                    ?.scrollIntoView({ behavior: "smooth" });
+                }}
+                data-testid="hero-view-work-btn"
+                className="btn-brutal btn-brutal-outline flex-1 sm:flex-none justify-center"
+              >
+                VIEW WORK →
+              </a>
+            </div>
           </motion.div>
         </div>
 

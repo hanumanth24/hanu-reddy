@@ -6,9 +6,7 @@ export default function ThemePicker() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const stored = getStoredTheme();
-    setCurrent(stored);
-    applyTheme(stored);
+    setCurrent(getStoredTheme());
   }, []);
 
   useEffect(() => {
