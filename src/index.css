@@ -17,6 +17,12 @@
     --accent: #e5fe40;
     --accent-hover: #cbe02d;
     --border-raw: #27272a;
+    /* Opacity variants — updated by applyTheme() and no-flash script */
+    --accent-op-05: rgba(229, 254, 64, 0.05);
+    --accent-op-10: rgba(229, 254, 64, 0.10);
+    --accent-op-30: rgba(229, 254, 64, 0.30);
+    --accent-op-40: rgba(229, 254, 64, 0.40);
+    --accent-op-60: rgba(229, 254, 64, 0.60);
 }
 
 /* ── Theme overrides ───────────────────────────────────────────────────────────
@@ -35,22 +41,22 @@
 [data-theme] .bg-\[\#E5FE40\]                            { background-color: var(--accent) !important; }
 [data-theme] .hover\:bg-\[\#E5FE40\]:hover               { background-color: var(--accent) !important; }
 
-/* opacity backgrounds */
-[data-theme] .bg-\[\#E5FE40\]\/5                         { background-color: color-mix(in srgb, var(--accent)  5%, transparent) !important; }
-[data-theme] .bg-\[\#E5FE40\]\/10                        { background-color: color-mix(in srgb, var(--accent) 10%, transparent) !important; }
-[data-theme] .bg-\[\#E5FE40\]\/30                        { background-color: color-mix(in srgb, var(--accent) 30%, transparent) !important; }
-[data-theme] .group:hover .group-hover\:bg-\[\#E5FE40\]\/5 { background-color: color-mix(in srgb, var(--accent) 5%, transparent) !important; }
+/* opacity backgrounds — use rgba vars, not color-mix (transparent=black causes grey) */
+[data-theme] .bg-\[\#E5FE40\]\/5                           { background-color: var(--accent-op-05) !important; }
+[data-theme] .bg-\[\#E5FE40\]\/10                          { background-color: var(--accent-op-10) !important; }
+[data-theme] .bg-\[\#E5FE40\]\/30                          { background-color: var(--accent-op-30) !important; }
+[data-theme] .group:hover .group-hover\:bg-\[\#E5FE40\]\/5 { background-color: var(--accent-op-05) !important; }
 
 /* solid borders */
-[data-theme] .border-\[\#E5FE40\]                        { border-color: var(--accent) !important; }
-[data-theme] .hover\:border-\[\#E5FE40\]:hover           { border-color: var(--accent) !important; }
-[data-theme] .focus\:border-\[\#E5FE40\]:focus           { border-color: var(--accent) !important; }
+[data-theme] .border-\[\#E5FE40\]                          { border-color: var(--accent) !important; }
+[data-theme] .hover\:border-\[\#E5FE40\]:hover             { border-color: var(--accent) !important; }
+[data-theme] .focus\:border-\[\#E5FE40\]:focus             { border-color: var(--accent) !important; }
 [data-theme] .group:hover .group-hover\:border-\[\#E5FE40\]{ border-color: var(--accent) !important; }
 
 /* opacity borders */
-[data-theme] .border-\[\#E5FE40\]\/30                    { border-color: color-mix(in srgb, var(--accent) 30%, transparent) !important; }
-[data-theme] .border-\[\#E5FE40\]\/40                    { border-color: color-mix(in srgb, var(--accent) 40%, transparent) !important; }
-[data-theme] .border-\[\#E5FE40\]\/60                    { border-color: color-mix(in srgb, var(--accent) 60%, transparent) !important; }
+[data-theme] .border-\[\#E5FE40\]\/30                      { border-color: var(--accent-op-30) !important; }
+[data-theme] .border-\[\#E5FE40\]\/40                      { border-color: var(--accent-op-40) !important; }
+[data-theme] .border-\[\#E5FE40\]\/60                      { border-color: var(--accent-op-60) !important; }
 
 * {
     box-sizing: border-box;
