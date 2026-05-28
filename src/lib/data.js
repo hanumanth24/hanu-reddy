@@ -1,6 +1,6 @@
 export const PROFILE = {
   name: "HANUMANTH REDDY BARLA",
-  title: "Senior AEM Full Stack Lead",
+  title: "AEP RT-CDP & AEM Full Stack Lead",
   location: "Fort Mill, SC",
   email: "hanureddy4268@gmail.com",
   phone: "(810) 493-7039",
