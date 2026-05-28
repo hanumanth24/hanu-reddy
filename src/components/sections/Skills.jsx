@@ -266,8 +266,8 @@ export default function Skills() {
             The <span className="text-[#E5FE40]">Stack.</span>
           </h2>
           <p className="font-mono text-[10px] text-zinc-500 tracking-[0.15em] max-w-sm md:text-right leading-loose">
-            6 YEARS AEM DEPTH · FULL ADOBE CLOUD BREADTH
-            <br />AEP · AJO · RT-CDP · CJA · EDS · ANALYTICS
+            10+ YEARS AEM & AEP EXPERTISE · FULL ADOBE CLOUD BREADTH
+            <br />RT-CDP · AJO · CJA · EDS · AEM CLOUD · ANALYTICS
           </p>
         </div>
 
