@@ -6,10 +6,9 @@ export const PROFILE = {
   phone: "(810) 493-7039",
   linkedin: "https://www.linkedin.com/in/hanu-reddy-8b04b7167/",
   calendly: "https://calendly.com/hanureddy4268",
-  resumeUrl:
-    "https://customer-assets.emergentagent.com/job_2de79c03-24f2-460d-b2d6-4adf6d029cff/artifacts/oy4kns8e_Hanumanth_Reddy_Resume-AEM-2026.pdf",
+  resumeUrl: "/Hanumanth_Reddy_AEM_AEP_RTCDP_Resume_2026.pdf",
   manifesto:
-    "Senior AEM Full Stack Lead and Adobe Certified Professional with 10+ years architecting enterprise-scale digital experiences for Fortune 500 — HD Supply, American Express, Verizon, Cummins. I design and ship Adobe Experience Cloud platforms end-to-end: AEM as a Cloud Service, Edge Delivery, Journey Optimizer, Real-Time CDP, and Customer Journey Analytics. Equal parts engineer, architect, and translator between business and code.",
+    "Adobe Certified AEP Real-Time CDP & Journey Optimizer Professional with 10+ years of enterprise digital experience. Specialized in architecting end-to-end AEP solutions — Real-Time Customer Profiles, audience segmentation, identity resolution, offer decisioning, and cross-channel journey orchestration — for Fortune 500 clients including HD Supply, American Express, Verizon, and Cummins. Equally fluent in AEM as a Cloud Service and Edge Delivery Services, enabling seamless AEP-to-AEM personalization delivery. Consistently delivers measurable impact: 25% engagement uplift, 50% faster page loads, 30% CDN latency drop, 40% buffer reduction.",
 };
 
 export const STATS = [
@@ -270,9 +269,9 @@ export const EXPERIENCE = [
     lng: -84.388,
     period: "Jan 2023 — Mar 2026",
     bullets: [
-      "Architected AEM Cloud + EDS surfaces; slashed TTFB 820ms → 190ms serving 4M+ monthly visitors — 50% load reduction.",
-      "Deployed AJO journeys on RT-CDP real-time profiles, orchestrating 4 channels; drove 25% engagement uplift.",
-      "Defined AEP identity resolution across 10+ source/destination connectors; GDPR/CCPA compliant by design.",
+      "Architected end-to-end AEP RT-CDP: XDM schemas, batch + streaming ingestion via Web SDK, unified customer profiles across 10M+ records; activated audiences to AJO, Adobe Target, and paid media destinations.",
+      "Designed multi-step AJO journeys (event-triggered, scheduled, transactional) with Offer Decisioning — eligibility rules, AI ranking, frequency capping — plus AI-driven personalization via Adobe Sensei; drove 25% engagement uplift across 4 channels.",
+      "Defined AEP identity namespace map (ECID + CRM ID + email hash) + GDPR/CCPA governance framework with DULE labels and consent policies across all pipelines; AEM Cloud + EDS delivered 50% page-load improvement.",
     ],
   },
   {
@@ -380,6 +379,13 @@ export const SKILLS = [
       "Adobe Target",
       "Adobe Campaign",
       "Adobe Launch",
+      "XDM Schema Design",
+      "Offer Decisioning",
+      "Identity Resolution",
+      "Segment Builder",
+      "Web SDK / Mobile SDK",
+      "DULE / Data Governance",
+      "AEP Destinations",
     ],
   },
   {

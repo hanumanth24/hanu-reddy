@@ -152,8 +152,8 @@ export default function ResumePage() {
                   className="font-mono text-zinc-500 leading-[1.9] max-w-lg overflow-hidden"
                   style={{ fontSize: "clamp(0.7rem, 1vw, 0.85rem)", letterSpacing: "0.12em" }}
                 >
-                  10+ YEARS · ADOBE EXPERIENCE CLOUD · FORTUNE 500
-                  <br />AEM CLOUD SERVICE · EDS · AJO · RT-CDP · CJA
+                  10+ YEARS · AEP · AEM · FORTUNE 500
+                  <br />RT-CDP · AJO · CJA · EDS · AEM CLOUD
                 </p>
               </div>
 
@@ -243,7 +243,7 @@ export default function ResumePage() {
           <div ref={statsRef} className="relative z-10 max-w-[1500px] mx-auto w-full px-6 md:px-12 mt-12">
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 border border-zinc-800 bg-[#080808]">
               {[
-                { value: "10+", label: "YRS AEM DEPTH" },
+                { value: "10+", label: "YRS EXPERIENCE" },
                 { value: "6+",  label: "FORTUNE 500" },
                 { value: "2",   label: "ADOBE CERTS" },
                 { value: "50%", label: "PAGE LOAD GAIN" },
