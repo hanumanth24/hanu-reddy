@@ -309,7 +309,7 @@ export default function AchievementsPage() {
           {/* Counter bar */}
           <div className="relative z-10 max-w-[1400px] mx-auto w-full px-6 md:px-12 pb-0">
             <div className="border border-zinc-800 bg-[#050505]/80 backdrop-blur-sm flex flex-wrap md:flex-nowrap">
-              <Counter value={10}  suffix="+"  label="YEARS IN AEM"        delay={0.5} />
+              <Counter value={10}  suffix="+"  label="YEARS EXPERIENCE"     delay={0.5} />
               <Counter value={6}   suffix="+"  label="FORTUNE 500 CLIENTS" delay={0.65} />
               <Counter value={2}   suffix=""   label="ADOBE CERTIFICATIONS" delay={0.8} />
               <Counter value={50}  suffix="%"  label="PAGE LOAD GAINS"     delay={0.95} />
@@ -435,7 +435,7 @@ export default function AchievementsPage() {
               Want results <span className="text-[#E5FE40]">like these?</span>
             </h2>
             <p className="font-mono text-zinc-400 text-sm max-w-md mx-auto leading-relaxed mb-12">
-              Open to AEM, Frontend, Martech, and Architecture roles. Let's build something that ships.
+              Open to AEP, AEM, Martech, and Architecture roles. Let's build something that ships.
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
               <a

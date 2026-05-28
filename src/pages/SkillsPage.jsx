@@ -162,8 +162,8 @@ export default function SkillsPage() {
                 </span>
               </h1>
               <p className="font-mono text-zinc-400 text-sm md:text-base max-w-xl leading-relaxed">
-                6 years AEM depth · Full Adobe Cloud breadth
-                <br />AEP · AJO · RT-CDP · CJA · EDS · Analytics · Launch
+                10+ years AEM & AEP expertise · Full Adobe Cloud breadth
+                <br />RT-CDP · AJO · CJA · EDS · AEM Cloud · Analytics · Launch
               </p>
             </div>
 
@@ -271,7 +271,7 @@ export default function SkillsPage() {
             <div>
               <div className="font-mono text-[9px] tracking-[0.35em] text-zinc-600 mb-3">OPEN ROLES</div>
               <h2 className="font-display uppercase font-semibold text-white text-3xl md:text-5xl leading-tight">
-                AEM · Frontend · Martech<br />
+                AEP · AEM · Martech<br />
                 <span className="text-[#E5FE40]">Architecture</span>
               </h2>
             </div>
