@@ -181,7 +181,7 @@ export default function Hero() {
           >
             <span className="w-8 h-px bg-[#E5FE40]" />
             <span className="font-mono text-[11px] tracking-[0.3em] text-[#E5FE40]">
-              AEP RT-CDP & AEM FULL STACK LEAD
+              SR. RT-CDP ARCHITECT & AEP LEAD
             </span>
           </motion.div>
 

@@ -1,14 +1,14 @@
 export const PROFILE = {
   name: "HANUMANTH REDDY BARLA",
-  title: "AEP RT-CDP & AEM Full Stack Lead",
+  title: "Senior RT-CDP Architect & AEP Lead",
   location: "Fort Mill, SC",
   email: "hanureddy4268@gmail.com",
   phone: "(810) 493-7039",
   linkedin: "https://www.linkedin.com/in/hanu-reddy-8b04b7167/",
   calendly: "https://calendly.com/hanureddy4268",
-  resumeUrl: "/Hanumanth_Reddy_AEM_AEP_RTCDP_Resume_2026.pdf",
+  resumeUrl: "/Hanumanth_Reddy_RTCDP_Architect_Resume.pdf",
   manifesto:
-    "Adobe Certified AEP Real-Time CDP & Journey Optimizer Professional with 10+ years of enterprise digital experience. Specialized in architecting end-to-end AEP solutions — Real-Time Customer Profiles, audience segmentation, identity resolution, offer decisioning, and cross-channel journey orchestration — for Fortune 500 clients including HD Supply, American Express, Verizon, and Cummins. Equally fluent in AEM as a Cloud Service and Edge Delivery Services, enabling seamless AEP-to-AEM personalization delivery. Consistently delivers measurable impact: 25% engagement uplift, 50% faster page loads, 30% CDN latency drop, 40% buffer reduction.",
+    "Senior Adobe Real-Time CDP Architect and Certified AEP Professional with 10+ years delivering enterprise customer data platform solutions for Fortune 500 clients including HD Supply, American Express, Verizon, and Cummins. Deep expertise leading end-to-end RT-CDP architecture — XDM schema design, source ingestion, identity resolution, profile strategy, audience segmentation, consent governance, and activation across B2C, B2B, and B2P use cases. Trusted senior technical advisor to executive and marketing stakeholders on architecture tradeoffs and implementation roadmaps; expertise spans RT-CDP, AJO, CJA, Marketo, Salesforce integration, and the full Adobe Experience Platform ecosystem. Consistent business impact: 25% engagement uplift, 50% faster page loads, 30% CDN latency reduction.",
 };
 
 export const STATS = [
@@ -262,16 +262,16 @@ export const PROJECTS = [
 
 export const EXPERIENCE = [
   {
-    role: "SR AEM FULL STACK LEAD",
+    role: "SR RT-CDP ARCHITECT & AEP LEAD",
     company: "HD Supply",
     location: "Atlanta, GA",
     lat: 33.749,
     lng: -84.388,
     period: "Jan 2023 — Mar 2026",
     bullets: [
-      "Architected end-to-end AEP RT-CDP: XDM schemas, batch + streaming ingestion via Web SDK, unified customer profiles across 10M+ records; activated audiences to AJO, Adobe Target, and paid media destinations.",
-      "Designed multi-step AJO journeys (event-triggered, scheduled, transactional) with Offer Decisioning — eligibility rules, AI ranking, frequency capping — plus AI-driven personalization via Adobe Sensei; drove 25% engagement uplift across 4 channels.",
-      "Defined AEP identity namespace map (ECID + CRM ID + email hash) + GDPR/CCPA governance framework with DULE labels and consent policies across all pipelines; AEM Cloud + EDS delivered 50% page-load improvement.",
+      "Led end-to-end RT-CDP solution architecture: XDM schemas for B2C + B2B + B2P use cases, batch/streaming ingestion via Web SDK and Server-Side API, merge policies with deterministic/probabilistic identity matching, profile collapse, householding, and identity graph hygiene across 10M+ customer profiles.",
+      "Built ML-assisted + rule-based audience segments with streaming sub-second qualification; designed multi-step AJO journeys (event-triggered, scheduled, transactional) with Offer Decisioning — eligibility rules, AI ranking, frequency capping across Email/Push/In-App — driving 25% engagement uplift.",
+      "Defined DULE + GDPR/CCPA data governance framework; integrated AEP with Salesforce CRM for B2P identity resolution and profile enrichment; served as senior technical advisor on architecture tradeoffs and roadmaps; AEM Cloud + EDS delivered 50% page-load reduction.",
     ],
   },
   {
@@ -282,9 +282,9 @@ export const EXPERIENCE = [
     lng: -74.006,
     period: "Jun 2022 — Jan 2023",
     bullets: [
-      "Re-tiered global CDN + Dispatcher; 30% latency drop and 99.99% uptime maintained through peak campaign launches.",
-      "AEM 6.5 + React SPA Editor — 0 engineering tickets per content edit across 3 global financial properties.",
-      "Adobe Target A/B + MVT testing on Launch; drove double-digit conversion lifts on primary landing surfaces.",
+      "Designed and built responsive AEM 6.5 web applications with custom templates, components, OSGi services, and Sling Servlets/Models; integrated AEM Publish + Dispatcher tiers with global CDN — 30% latency reduction and 15% page-load improvement backed by SSL/TLS and DDoS protection.",
+      "Built React SPA components on the AEM SPA Editor SDK with server-side and client-side Adobe Target personalization experiments; integrated Adobe Analytics (Launch/DTM) for granular interaction tracking and A/B reporting across 3 global financial properties.",
+      "Managed AEM DAM workflows for asset ingestion, metadata tagging, and rendition generation; configured Apache Felix Admin Console and registered custom OSGi services to extend platform capabilities.",
     ],
   },
   {
@@ -295,9 +295,9 @@ export const EXPERIENCE = [
     lng: -84.388,
     period: "Oct 2020 — Jun 2022",
     bullets: [
-      "Dispatcher + CDN caching re-architecture; halved page load times across 500K+ SKU product catalog.",
-      "Adaptive streaming pipeline (HLS/DASH); 40% buffer reduction + 100% engagement event coverage via ACDL.",
-      "Headless Content Fragments + GraphQL layer; enabled same-day omnichannel content rollouts across 6 surfaces.",
+      "Implemented AEM Dispatcher + CDN caching strategies reducing page load times by 50%; optimized video delivery with HLS/DASH adaptive streaming decreasing buffering by 40%; configured ACDL for standardized event tracking feeding Adobe Analytics Workspace.",
+      "Set up Adobe Target auto-personalization and Recommendations to improve product discovery metrics; leveraged Content Fragments + Experience Fragments for headless delivery across web, mobile, and third-party channels via React RemoteApp pattern.",
+      "Built custom AEM workflows for automated content review, approval, and multi-channel publishing; configured replication agents and dispatcher flush rules; translated business requirements into modular component designs documented on Confluence.",
     ],
   },
   {
@@ -308,9 +308,9 @@ export const EXPERIENCE = [
     lng: -96.797,
     period: "Jun 2019 — Sep 2020",
     bullets: [
-      "Dockerized AEM on AWS; cut deployment time from 3+ hours to 12-minute fully automated CI/CD pipelines.",
-      "MSM + Live Copy across 5+ multi-brand sites; regional variant launch time reduced to under 1 day.",
-      "React micro-frontends on SPA Editor SDK — 0 engineering tickets per content authoring operation.",
+      "Implemented AEM MSM + Live Copy across multiple brand sites; built React micro-frontends via AEM SPA Editor SDK; instrumented pages with Adobe Analytics custom eVars/props/events via Launch and configured Adobe Target XT + MVT activities for landing page and CTA optimization.",
+      "Managed AWS services, automated Docker deployment pipelines, and developed OSGi event listeners and schedulers; led requirement analysis between business stakeholders and offshore engineering teams.",
+      "Developed strategic metadata and SEO best practices; conducted ADA knowledge transfer with UI Development teams; configured AEM Dispatcher caching rules and URL mapping to optimize request handling.",
     ],
   },
   {
@@ -321,9 +321,9 @@ export const EXPERIENCE = [
     lng: -80.0905,
     period: "Oct 2018 — May 2019",
     bullets: [
-      "AEM + Angular 6 consumer experiences with editable templates, layout policies, and policy-driven component locking.",
-      "Adobe Target experience fragments as offers — 8 A/B tests shipped across 3 client e-commerce properties.",
-      "Delivered full component library; reduced time-to-author new pages from days to under 2 hours.",
+      "Developed digital consumer experiences using AEM (CRX, Target, DAM) with Angular 6 UI, editable page templates, and CUG-based role access control across 3 e-commerce client properties.",
+      "Integrated Adobe Analytics via Launch; configured Adobe Target Experience Fragments as audience- and geolocation-based personalized offers for targeted content delivery.",
+      "Built React components via AEM SPA Editor preserving full Touch UI authoring capability; leveraged AEM Core Components and WCM Core as the accessible, extensible foundation for all component development.",
     ],
   },
   {
@@ -334,9 +334,9 @@ export const EXPERIENCE = [
     lng: -81.0348,
     period: "Jun 2018 — Sep 2018",
     bullets: [
-      "AEM 6.2 → 6.4 in-place migration; 0 content loss and zero-downtime cutover across 40K+ pages.",
-      "Apache Solr search integration with faceted navigation; cut search result latency by 60%.",
-      "GraphQL headless content delivery layer adopted as the standard API pattern for downstream mobile teams.",
+      "Migrated AEM 6.2 → 6.4; built React components mapped to Content Fragments via GraphQL for headless delivery; integrated Adobe Analytics and configured Adobe Target content swap offers.",
+      "Integrated AEM with Apache Solr for optimized faceted search; implemented content package management and JUnit test pipeline integrated into Maven build for CI/CD quality assurance.",
+      "Wrote JUnit tests for AEM backend services; developed Sling resource resolvers and resource mappings to support clean URL structures and API-first content delivery patterns.",
     ],
   },
   {
@@ -347,9 +347,22 @@ export const EXPERIENCE = [
     lng: -85.9214,
     period: "May 2017 — May 2018",
     bullets: [
-      "AngularJS custom-elements component library adopted across 3 industrial product divisions globally.",
-      "Adobe Campaign + Target — ran 20+ A/B tests informing B2B acquisition flows; statistically significant lift on 14.",
-      "Coral UI / Granite UI custom dialog framework; reduced author training overhead by standardising component configs.",
+      "Built AEM components, templates, and Coral UI/Granite UI dialogs with AEM Query Builder + JCR-SQL2 and Oak index tuning; managed environment upgrades and hotfix installations across 3 global industrial product divisions.",
+      "Set up Adobe Analytics report suites and classification rules; implemented Adobe Target A/B tests with response tokens for unified analytics reporting; deployed Adobe Campaign for targeted B2B acquisition campaigns.",
+      "Developed custom Coral UI/Granite UI dialog frameworks standardizing authoring patterns across global divisions; improved content query performance via JCR-SQL2 and Oak index optimization.",
+    ],
+  },
+  {
+    role: "AEM DEVELOPER",
+    company: "Consuptra Info Solutions",
+    location: "Hyderabad, India",
+    lat: 17.385,
+    lng: 78.4867,
+    period: "May 2014 — Jun 2015",
+    bullets: [
+      "Developed AEM templates, components, custom OSGi bundles, Sling resource resolvers, and replication agents for enterprise web properties; integrated Google Analytics and Adobe Analytics beacon calls for stakeholder dashboards.",
+      "Implemented Adobe Target mbox calls for A/B testing of hero content; executed weekly builds using GIT and Jenkins CI/CD pipelines; coordinated security reviews and provided UAT support.",
+      "Configured AEM replication and reverse replication agents to manage content activation and user-generated content flows between publish and author instances.",
     ],
   },
 ];
@@ -374,10 +387,11 @@ export const SKILLS = [
     category: "ADOBE EXPERIENCE PLATFORM",
     items: [
       "Journey Optimizer (AJO)",
-      "Real-Time CDP",
+      "Real-Time CDP (B2C/B2B/B2P)",
       "Customer Journey Analytics",
       "Adobe Target",
       "Adobe Campaign",
+      "Marketo",
       "Adobe Launch",
       "XDM Schema Design",
       "Offer Decisioning",
@@ -386,6 +400,7 @@ export const SKILLS = [
       "Web SDK / Mobile SDK",
       "DULE / Data Governance",
       "AEP Destinations",
+      "Salesforce Integration",
     ],
   },
   {
@@ -405,6 +420,7 @@ export const SKILLS = [
     category: "BACKEND & BUILD",
     items: [
       "Java",
+      "SQL",
       "Apache Sling",
       "Maven",
       "Apache Solr",

@@ -271,7 +271,7 @@ export default function SkillsPage() {
             <div>
               <div className="font-mono text-[9px] tracking-[0.35em] text-zinc-600 mb-3">OPEN ROLES</div>
               <h2 className="font-display uppercase font-semibold text-white text-3xl md:text-5xl leading-tight">
-                AEP · AEM · Martech<br />
+                RT-CDP · AEP · Martech<br />
                 <span className="text-[#E5FE40]">Architecture</span>
               </h2>
             </div>

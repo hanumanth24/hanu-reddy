@@ -357,7 +357,7 @@ export default function About() {
                     HANUMANTH REDDY BARLA
                   </div>
                   <div className="font-mono text-[10px] tracking-[0.3em] text-zinc-400 mt-1">
-                    AEP RT-CDP & AEM FULL STACK LEAD
+                    SR. RT-CDP ARCHITECT & AEP LEAD
                   </div>
                 </div>
               </div>
