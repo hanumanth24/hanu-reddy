@@ -190,7 +190,7 @@ export default function About() {
   useEffect(() => {
     const words = [
       { ref: word1Ref, text: "Engineer." },
-      { ref: word2Ref, text: "Architect." },
+      { ref: word2Ref, text: "Lead." },
       { ref: word3Ref, text: "Translator." },
     ];
     const triggers = [];
@@ -357,7 +357,7 @@ export default function About() {
                     HANUMANTH REDDY BARLA
                   </div>
                   <div className="font-mono text-[10px] tracking-[0.3em] text-zinc-400 mt-1">
-                    SR. RT-CDP ARCHITECT & AEP LEAD
+                    SR. AEM-RTCDP LEAD
                   </div>
                 </div>
               </div>
@@ -390,7 +390,7 @@ export default function About() {
                 style={{ fontSize: "clamp(2rem, 5vw, 4.5rem)" }}
               >
                 <span ref={word1Ref} className="block">Engineer.</span>
-                <span ref={word2Ref} className="block">Architect.</span>
+                <span ref={word2Ref} className="block">Lead.</span>
                 <span ref={word3Ref} className="block text-[#E5FE40]">Translator.</span>
               </h2>
 

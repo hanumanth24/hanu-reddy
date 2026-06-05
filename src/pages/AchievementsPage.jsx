@@ -435,7 +435,7 @@ export default function AchievementsPage() {
               Want results <span className="text-[#E5FE40]">like these?</span>
             </h2>
             <p className="font-mono text-zinc-400 text-sm max-w-md mx-auto leading-relaxed mb-12">
-              Open to AEP, AEM, Martech, and Architecture roles. Let's build something that ships.
+              Open to AEP, AEM, Martech, and leadership roles. Let's build something that ships.
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
               <a

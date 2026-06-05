@@ -16,7 +16,13 @@ export default function SkillNetCanvas() {
     if (!canvas) return;
     const parent = canvas.parentElement;
 
-    const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: true, powerPreference: "high-performance" });
+    let renderer;
+    try {
+      renderer = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: true, powerPreference: "high-performance" });
+    } catch {
+      canvas.style.display = "none";
+      return undefined;
+    }
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
     renderer.setClearColor(0x000000, 0);
 

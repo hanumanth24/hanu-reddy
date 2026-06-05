@@ -43,7 +43,7 @@ function makeNodeLabel(text, sub, color) {
   ctx.fillText(sub, 4, 48);
   const tex = new THREE.CanvasTexture(cv);
   tex.minFilter = THREE.LinearFilter;
-  const mat = new THREE.SpriteMaterial({ map: tex, transparent: true, opacity: 0, depthWrite: false });
+  const mat = new THREE.SpriteMaterial({ map: tex, transparent: true, opacity: 0.95, depthWrite: false });
   const spr = new THREE.Sprite(mat);
   spr.scale.set(2.1, 0.51, 1);
   return spr;
@@ -65,7 +65,7 @@ function makeEdgeLabel(text, color) {
   ctx.fillText(text, W / 2, 21);
   const tex = new THREE.CanvasTexture(cv);
   tex.minFilter = THREE.LinearFilter;
-  const mat = new THREE.SpriteMaterial({ map: tex, transparent: true, opacity: 0, depthWrite: false });
+  const mat = new THREE.SpriteMaterial({ map: tex, transparent: true, opacity: 0.85, depthWrite: false });
   const spr = new THREE.Sprite(mat);
   spr.scale.set(1.2, 0.2, 1);
   return spr;
@@ -79,12 +79,18 @@ export default function NodeGraphCanvas({ mouse }) {
     if (!canvas) return;
     const parent = canvas.parentElement;
 
-    const renderer = new THREE.WebGLRenderer({
-      canvas,
-      antialias: false,
-      alpha: true,
-      powerPreference: "high-performance",
-    });
+    let renderer;
+    try {
+      renderer = new THREE.WebGLRenderer({
+        canvas,
+        antialias: false,
+        alpha: true,
+        powerPreference: "high-performance",
+      });
+    } catch {
+      canvas.style.display = "none";
+      return undefined;
+    }
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
     renderer.setClearColor(0x000000, 0);
 
@@ -144,10 +150,10 @@ export default function NodeGraphCanvas({ mouse }) {
     NODES.forEach((n, i) => {
       // Glow halo
       const glowGeo = new THREE.CircleGeometry(n.r * 3.2, 32);
-      const glowMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(n.color), transparent: true, opacity: 0 });
+      const glowMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(n.color), transparent: true, opacity: 0.06 });
       const glow = new THREE.Mesh(glowGeo, glowMat);
       glow.position.set(n.x, n.y, -0.1);
-      glow.scale.set(0, 0, 1);
+      glow.scale.set(1, 1, 1);
       scene.add(glow);
 
       // Filled circle
@@ -155,7 +161,7 @@ export default function NodeGraphCanvas({ mouse }) {
       const mat = new THREE.MeshBasicMaterial({ color: new THREE.Color(n.color) });
       const mesh = new THREE.Mesh(geo, mat);
       mesh.position.set(n.x, n.y, 0);
-      mesh.scale.set(0, 0, 1);
+      mesh.scale.set(1, 1, 1);
       scene.add(mesh);
 
       // Rotating outer ring for primary node (AEP)
@@ -165,7 +171,7 @@ export default function NodeGraphCanvas({ mouse }) {
         const rMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(n.color), transparent: true, opacity: 0.35, side: THREE.DoubleSide });
         ring = new THREE.Mesh(rGeo, rMat);
         ring.position.set(n.x, n.y, 0.01);
-        ring.scale.set(0, 0, 1);
+        ring.scale.set(1, 1, 1);
         scene.add(ring);
       }
 
@@ -198,7 +204,7 @@ export default function NodeGraphCanvas({ mouse }) {
         return new THREE.Vector3(sx + (ex - sx) * t, sy + (ey - sy) * t, -0.05);
       });
       const geo = new THREE.BufferGeometry().setFromPoints(pts);
-      geo.setDrawRange(0, 0);
+      geo.setDrawRange(0, EDGE_SEGS);
       const lineMat = new THREE.LineBasicMaterial({ color: new THREE.Color(color), transparent: true, opacity: 0.28 });
       scene.add(new THREE.Line(geo, lineMat));
       edgeGeos.push(geo);
@@ -214,7 +220,7 @@ export default function NodeGraphCanvas({ mouse }) {
       ]);
       const aGeo = new THREE.BufferGeometry();
       aGeo.setAttribute("position", new THREE.BufferAttribute(aVerts, 3));
-      const aMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(color), transparent: true, opacity: 0 });
+      const aMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(color), transparent: true, opacity: 0.85 });
       scene.add(new THREE.Mesh(aGeo, aMat));
 
       // Edge label at midpoint, offset perpendicularly
@@ -230,7 +236,7 @@ export default function NodeGraphCanvas({ mouse }) {
         const pGeo = new THREE.BufferGeometry();
         const pArr = new Float32Array([sx, sy, 0.15]);
         pGeo.setAttribute("position", new THREE.BufferAttribute(pArr, 3));
-        const pMat = new THREE.PointsMaterial({ color: new THREE.Color(color), size: 0.1, sizeAttenuation: true, transparent: true, opacity: 0 });
+        const pMat = new THREE.PointsMaterial({ color: new THREE.Color(color), size: 0.1, sizeAttenuation: true, transparent: true, opacity: 0.85 });
         const pts2 = new THREE.Points(pGeo, pMat);
         scene.add(pts2);
 
@@ -271,18 +277,6 @@ export default function NodeGraphCanvas({ mouse }) {
       gsap.to(glow.material, { opacity: 0.08, duration: 0.8, delay: d });
       if (ring) gsap.to(ring.scale, { x: 1, y: 1, duration: 0.6, ease: "back.out(2)", delay: d });
       gsap.to(nodeLabelSprites[i].material, { opacity: 1, duration: 0.5, delay: d + 0.3 });
-    });
-
-    // Entrance — edges draw in
-    edgeGeos.forEach((geo, i) => {
-      const proxy = { v: 0 };
-      gsap.to(proxy, {
-        v: EDGE_SEGS,
-        duration: 0.9,
-        ease: "expo.out",
-        delay: D0 + 0.8 + i * 0.1,
-        onUpdate() { geo.setDrawRange(0, Math.round(proxy.v)); },
-      });
     });
 
     // Entrance — edge labels

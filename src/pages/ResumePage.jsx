@@ -152,7 +152,7 @@ export default function ResumePage() {
                   className="font-mono text-zinc-500 leading-[1.9] max-w-lg overflow-hidden"
                   style={{ fontSize: "clamp(0.7rem, 1vw, 0.85rem)", letterSpacing: "0.12em" }}
                 >
-                  10+ YEARS · RT-CDP ARCHITECT · FORTUNE 500
+                  10+ YEARS · AEM-RTCDP LEAD · FORTUNE 500
                   <br />RT-CDP · AJO · CJA · MARKETO · SALESFORCE · AEM CLOUD
                 </p>
               </div>

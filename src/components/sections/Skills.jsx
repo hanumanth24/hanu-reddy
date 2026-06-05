@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { SKILLS } from "@/lib/data";
+import { HOME_SKILLS } from "@/lib/data";
 import NodeGraphCanvas from "@/components/three/NodeGraphCanvas";
 import LazyMount from "@/components/LazyMount";
 import SkillTooltipTag from "@/components/SkillTooltipTag";
@@ -358,12 +358,15 @@ export default function Skills() {
           <span className="section-label">[ FULL STACK SKILLS ]</span>
           <span className="flex-1 h-px bg-zinc-800" />
         </div>
+        <div className="mb-4 font-mono text-[9px] tracking-[0.28em] text-zinc-600 sm:hidden">
+          TAP A STACK ITEM FOR CONTEXT
+        </div>
 
         <div
           data-skills-grid
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-0 border-l border-t border-zinc-800 mb-20"
         >
-          {SKILLS.map((group, idx) => (
+          {HOME_SKILLS.map((group, idx) => (
             <div
               key={group.category}
               data-skill-group
@@ -379,6 +382,9 @@ export default function Skills() {
                   {group.items.length.toString().padStart(2, "0")}
                 </span>
               </div>
+              <p className="mb-5 min-h-[2.5rem] font-mono text-[10px] leading-relaxed text-zinc-600">
+                {group.summary}
+              </p>
               <div className="flex flex-wrap gap-2">
                 {group.items.map((item) => (
                   <SkillTooltipTag key={item} label={item} />

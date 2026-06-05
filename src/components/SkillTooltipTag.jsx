@@ -5,6 +5,7 @@ import { getSkillDescription } from "@/lib/data";
 
 export default function SkillTooltipTag({ label, className = "", strength = 0.25 }) {
   const ref = useRef(null);
+  const cardRef = useRef(null);
   const tooltipId = useId();
   const [tooltip, setTooltip] = useState(null);
   const [isTouch, setIsTouch] = useState(false);
@@ -30,6 +31,25 @@ export default function SkillTooltipTag({ label, className = "", strength = 0.25
       window.removeEventListener("keydown", closeOnEscape);
       document.removeEventListener("pointerdown", close);
     };
+  }, [tooltip]);
+
+  useEffect(() => {
+    if (!tooltip || !cardRef.current) return;
+    gsap.fromTo(
+      cardRef.current,
+      {
+        autoAlpha: 0,
+        y: tooltip.mode === "sheet" ? 24 : 8,
+        scale: tooltip.mode === "sheet" ? 1 : 0.98,
+      },
+      {
+        autoAlpha: 1,
+        y: 0,
+        scale: 1,
+        duration: 0.22,
+        ease: "power2.out",
+      }
+    );
   }, [tooltip]);
 
   const closeOnEscape = (event) => {
@@ -84,15 +104,19 @@ export default function SkillTooltipTag({ label, className = "", strength = 0.25
 
   const tooltipCard = (
     <div
+      ref={cardRef}
       id={tooltipId}
       role="tooltip"
       className={
         tooltip?.mode === "sheet"
-          ? "fixed inset-x-0 bottom-0 z-[90] border-t border-[#E5FE40] bg-[#070707] px-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))] pt-4 shadow-[0_-12px_40px_rgba(0,0,0,0.55)]"
+          ? "fixed inset-x-0 bottom-0 z-[90] border-t border-[#E5FE40] bg-[#070707] px-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))] pt-3 shadow-[0_-12px_40px_rgba(0,0,0,0.55)]"
           : "fixed z-[90] w-[min(22.5rem,calc(100vw-2rem))] border border-zinc-700 bg-[#070707]/95 p-4 shadow-[8px_8px_0_rgba(229,254,64,0.18)] pointer-events-none"
       }
       style={tooltip?.mode === "float" ? { left: tooltip.x, top: tooltip.y } : undefined}
     >
+      {tooltip?.mode === "sheet" && (
+        <div className="mx-auto mb-3 h-[2px] w-12 bg-zinc-700" />
+      )}
       <div className="mb-3 flex items-start justify-between gap-4 border-b border-zinc-800 pb-3">
         <div>
           <div className="mb-1 font-mono text-[8px] tracking-[0.32em] text-zinc-500">STACK NOTE</div>

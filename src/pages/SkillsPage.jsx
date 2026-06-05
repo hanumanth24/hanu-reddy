@@ -58,6 +58,9 @@ function SkillGroupCard({ group, index }) {
           {group.items.length.toString().padStart(2, "0")}
         </span>
       </div>
+      <p className="mb-5 min-h-[2.5rem] font-mono text-[10px] leading-relaxed text-zinc-600">
+        {group.summary}
+      </p>
       <div className="flex flex-wrap gap-2">
         {group.items.map((item) => (
           <SkillTooltipTag key={item} label={item} className="text-xs" strength={0.3} />
@@ -194,6 +197,9 @@ export default function SkillsPage() {
             <div className="flex items-center gap-4 mb-12">
               <span className="section-label">[ 02 / FULL STACK SKILLS ]</span>
               <span className="flex-1 h-px bg-zinc-800" />
+            </div>
+            <div className="-mt-8 mb-10 font-mono text-[9px] tracking-[0.28em] text-zinc-600 sm:hidden">
+              TAP A STACK ITEM FOR CONTEXT
             </div>
 
             <h2 className="font-display uppercase font-semibold text-white leading-[0.9] mb-14"

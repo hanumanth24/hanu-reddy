@@ -181,7 +181,7 @@ export default function Hero() {
           >
             <span className="w-8 h-px bg-[#E5FE40]" />
             <span className="font-mono text-[11px] tracking-[0.3em] text-[#E5FE40]">
-              SR. RT-CDP ARCHITECT & AEP LEAD
+              SR. AEM-RTCDP LEAD
             </span>
           </motion.div>
 
@@ -210,7 +210,7 @@ export default function Hero() {
           >
             <p className="font-mono text-sm md:text-base text-zinc-300 leading-relaxed">
               <span className="text-[#E5FE40]">{"// "}</span>
-              Adobe Certified AEP RT-CDP & Journey Optimizer Professional. 10+ years architecting{" "}
+              Adobe Certified AEP RT-CDP & Journey Optimizer Professional. 10+ years leading{" "}
               <span className="text-white">Fortune 500</span> platforms — HD Supply, Amex,
               Verizon, Cummins.
             </p>
