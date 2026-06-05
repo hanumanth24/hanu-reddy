@@ -9,6 +9,7 @@ import ScrollProgressBar from "@/components/ScrollProgressBar";
 import Footer from "@/components/sections/Footer";
 import LazyMount from "@/components/LazyMount";
 import SkillNetCanvas from "@/components/three/SkillNetCanvas";
+import SkillTooltipTag from "@/components/SkillTooltipTag";
 import { SKILLS, CERTIFICATIONS } from "@/lib/data";
 import { Award } from "lucide-react";
 
@@ -24,33 +25,6 @@ const AEC_PRODUCTS = [
   { name: "ANALYTICS",       tag: "MEASUREMENT",        color: "#f87171", desc: "eVars · ACDL data layer · Launch tags · Funnel analysis · Workspace" },
   { name: "ADOBE LAUNCH",    tag: "TAG MANAGEMENT",     color: "#facc15", desc: "Rules engine · Extensions · Data layer · ACDL · Server-side forwarding" },
 ];
-
-// ── Skill tag with magnetic hover ─────────────────────────────────────────────
-function SkillTag({ label }) {
-  const ref = useRef(null);
-  const onMove = (e) => {
-    const el = ref.current;
-    if (!el) return;
-    const r = el.getBoundingClientRect();
-    gsap.to(el, {
-      x: (e.clientX - r.left - r.width / 2) * 0.3,
-      y: (e.clientY - r.top - r.height / 2) * 0.3,
-      duration: 0.2, ease: "power2.out",
-    });
-  };
-  const onLeave = () => gsap.to(ref.current, { x: 0, y: 0, duration: 0.4, ease: "elastic.out(1,0.4)" });
-
-  return (
-    <span
-      ref={ref}
-      onMouseMove={onMove}
-      onMouseLeave={onLeave}
-      className="brutal-tag text-zinc-300 cursor-default select-none inline-block text-xs"
-    >
-      {label}
-    </span>
-  );
-}
 
 // ── Animated skill group card ─────────────────────────────────────────────────
 function SkillGroupCard({ group, index }) {
@@ -85,7 +59,9 @@ function SkillGroupCard({ group, index }) {
         </span>
       </div>
       <div className="flex flex-wrap gap-2">
-        {group.items.map((item) => <SkillTag key={item} label={item} />)}
+        {group.items.map((item) => (
+          <SkillTooltipTag key={item} label={item} className="text-xs" strength={0.3} />
+        ))}
       </div>
     </div>
   );

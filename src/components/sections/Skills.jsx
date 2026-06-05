@@ -4,6 +4,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SKILLS } from "@/lib/data";
 import NodeGraphCanvas from "@/components/three/NodeGraphCanvas";
 import LazyMount from "@/components/LazyMount";
+import SkillTooltipTag from "@/components/SkillTooltipTag";
 import useTitleReveal from "@/hooks/useTitleReveal";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -60,39 +61,6 @@ const ADOBE_PRODUCTS = [
     desc: "Rules engine · Extensions · Data layer · ACDL",
   },
 ];
-
-function MagneticTag({ children }) {
-  const ref = useRef(null);
-
-  const onMove = (e) => {
-    const el = ref.current;
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
-    const cx = rect.left + rect.width / 2;
-    const cy = rect.top + rect.height / 2;
-    gsap.to(el, {
-      x: (e.clientX - cx) * 0.25,
-      y: (e.clientY - cy) * 0.25,
-      duration: 0.2,
-      ease: "power2.out",
-    });
-  };
-
-  const onLeave = () =>
-    gsap.to(ref.current, { x: 0, y: 0, duration: 0.4, ease: "elastic.out(1, 0.4)" });
-
-  return (
-    <span
-      ref={ref}
-      data-cursor="hover"
-      className="brutal-tag text-zinc-300 cursor-default select-none inline-block"
-      onMouseMove={onMove}
-      onMouseLeave={onLeave}
-    >
-      {children}
-    </span>
-  );
-}
 
 export default function Skills() {
   const titleRef = useRef(null);
@@ -413,7 +381,7 @@ export default function Skills() {
               </div>
               <div className="flex flex-wrap gap-2">
                 {group.items.map((item) => (
-                  <MagneticTag key={item}>{item}</MagneticTag>
+                  <SkillTooltipTag key={item} label={item} />
                 ))}
               </div>
             </div>
